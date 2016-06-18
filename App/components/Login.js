@@ -6,6 +6,7 @@ import {
   Image,
   TextInput,
   TouchableHighlight,
+  AlertIOS,
   ActivityIndicatorIOS,
 } from 'react-native';
 
