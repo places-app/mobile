@@ -5,7 +5,6 @@ import {
   View,
   Image,
   TouchableHighlight,
-  TextInput,
 } from 'react-native';
 
 import SubmitPage from './SubmitPage';
@@ -15,59 +14,28 @@ class MapPage extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      username: 'Adam',
-      userId: '10',
-      place: '',
-      note: '',
+      username: '',
+      password: '',
       showProgess: false,
+      location: 'placeHolder',
     };
-  }
-
-  handlePlace(text) {
-    this.setState({
-      place: text,
-    });
-  }
-
-  handleNote(text) {
-    this.setState({
-      note: text,
-    });
+    this.props.handleNavBar.bind(this);
   }
 
   hideBar() {
-    this.props.handleNavBar(true);
+    this.props.handleNavBar(false);
   }
 
   submitLocation() {
-    const userId = this.state.userId;
-    const note = this.state.note;
-    const place = this.state.place;
-
-    console.log('Clicked!');
-    console.log(`place is: ${this.state.place}
-      note is: ${this.state.note}`);
-    const body = {
-      userId,
-      place,
-      note,
-    };
-    const url = `http://localhost:7000/api/users/${this.state.userId}/places`;
-    fetch(url, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
+    this.props.navigator.push({
+      component: SubmitPage,
+      title: 'Submit Page',
+      backButtonTitle: 'Return',
+      passProps: {
+        hideBar: this.hideBar.bind(this),
+        handleNavBar: this.props.handleNavBar,
+        location: this.state.location,
       },
-      body: JSON.stringify(body),
-    })
-    .then((response) => {
-      console.log(response);
-      if (response.status === 200) {
-        
-      }
-    })
-    .catch((error) => {
-      console.warn(error);
     });
   }
 
@@ -77,16 +45,6 @@ class MapPage extends Component {
         <Image style={styles.logo}
         source={{uri:'http://2.bp.blogspot.com/-IELsSax8WPg/Tyzsu05V8qI/AAAAAAAAAWU/qbPzat5H2Oc/s400/Map_pin2.png'}} />
         <Text> Logged In </Text>
-        <TextInput
-          onChangeText={(text) => { this.handlePlace(text); }}
-          style={styles.input}
-          placeholder='Name of place'
-        />
-        <TextInput
-          onChangeText={(text) => { this.handleNote(text); }}
-          style={styles.input}
-          placeholder='Note about place'
-        />
         <TouchableHighlight style={styles.button}>
           <Text
             style={styles.buttonText}
@@ -108,6 +66,7 @@ const styles = StyleSheet.create({
     padding: 10,
   },
   logo: {
+    marginTop: 40,
     width: 100,
     height: 100,
   },
@@ -120,14 +79,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
 
-  },
-  input: {
-    height: 50,
-    marginTop: 10,
-    padding: 4,
-    fontSize: 18,
-    borderWidth: 1,
-    borderColor: '#ff0066',
   },
 
   buttonText: {

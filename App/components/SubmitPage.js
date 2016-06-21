@@ -16,26 +16,21 @@ class SubmitPage extends Component {
     this.state = {
       username: 'Adam',
       userId: '10',
-      place: '',
+      place: this.props.location,
       note: '',
       showProgess: false,
     };
   }
 
-  handlePlace(text) {
-    this.setState({
-      place: text,
-    });
+  componentDidMount() {
+    this.props.handleNavBar(true);
   }
+
 
   handleNote(text) {
     this.setState({
       note: text,
     });
-  }
-
-  hideBar() {
-    this.props.handleNavBar(true);
   }
 
   goBack() {
@@ -69,11 +64,6 @@ class SubmitPage extends Component {
       if (response.status === 200) {
         self.setState({ showProgess: false });
         self.goBack();
-        // self.props.navigator.push({
-        //   component: SubmitPage,
-        //   title: 'Submit Page',
-        //   passProps: { hideBar: this.hideBar.bind(this) },
-        // });
       }
     })
     .catch((error) => {
@@ -89,11 +79,9 @@ class SubmitPage extends Component {
           source={{ uri: 'http://2.bp.blogspot.com/-IELsSax8WPg/Tyzsu05V8qI/AAAAAAAAAWU/qbPzat5H2Oc/s400/Map_pin2.png' }}
         />
         <Text> Logged In </Text>
-        <TextInput
-          onChangeText={(text) => { this.handlePlace(text); }}
-          style={styles.input}
-          placeholder="Name of place"
-        />
+        <Text style={styles.selectedPlace}>
+          {this.props.location}
+        </Text>
         <TextInput
           onChangeText={(text) => { this.handleNote(text); }}
           style={styles.input}
@@ -107,11 +95,13 @@ class SubmitPage extends Component {
             Submit Place
           </Text>
         </TouchableHighlight>
-        <ActivityIndicatorIOS
-          animating={this.state.showProgess}
-          size="large"
-          style={styles.loader}
-        />
+        {this.state.showProgess ?
+          <ActivityIndicatorIOS
+            animating={this.state.showProgess}
+            size="large"
+            style={styles.loader}
+          /> : null
+        }
       </View>
     );
   }
@@ -126,6 +116,7 @@ const styles = StyleSheet.create({
     padding: 10,
   },
   logo: {
+    marginTop: 40,
     width: 100,
     height: 100,
   },
@@ -154,7 +145,20 @@ const styles = StyleSheet.create({
   loader: {
     marginTop: 20,
   },
+  selectedPlace: {
+    fontWeight: 'bold',
+    height: 50,
+    marginTop: 30,
+    padding: 4,
+    fontSize: 18,
+  },
 
 });
+
+SubmitPage.propTypes = {
+  location: React.PropTypes.string,
+  handleNavBar: React.PropTypes.func,
+  navigator: React.PropTypes.object,
+};
 
 export default SubmitPage;
