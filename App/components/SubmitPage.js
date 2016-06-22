@@ -16,7 +16,7 @@ class SubmitPage extends Component {
     this.state = {
       username: 'Adam',
       userId: '10',
-      place: this.props.location,
+      location: this.props.location,
       note: '',
       showProgess: false,
     };
@@ -41,14 +41,14 @@ class SubmitPage extends Component {
     this.setState({ showProgess: true });
     const userId = this.state.userId;
     const note = this.state.note;
-    const place = this.state.place;
+    const location = this.state.location;
     const self = this;
     console.log('Clicked!');
     console.log(`place is: ${this.state.place}
       note is: ${this.state.note}`);
     const body = {
       userId,
-      place,
+      location,
       note,
     };
     const url = `http://localhost:7000/api/users/${userId}/places`;
@@ -156,7 +156,7 @@ const styles = StyleSheet.create({
 });
 
 SubmitPage.propTypes = {
-  location: React.PropTypes.string,
+  location: React.PropTypes.object,
   handleNavBar: React.PropTypes.func,
   navigator: React.PropTypes.object,
 };

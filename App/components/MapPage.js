@@ -17,7 +17,11 @@ class MapPage extends Component {
       username: '',
       password: '',
       showProgess: false,
-      location: 'placeHolder',
+      location: {
+        name: 'placeHolder',
+        lat: '40',
+        lng: '50',
+      },
     };
     this.props.handleNavBar.bind(this);
   }
