@@ -17,18 +17,29 @@ class MapPage extends Component {
       username: '',
       password: '',
       showProgess: false,
+      location: {
+        name: 'placeHolder',
+        lat: '40',
+        lng: '50',
+      },
     };
+    this.props.handleNavBar.bind(this);
   }
 
   hideBar() {
-    this.props.handleNavBar(true);
+    this.props.handleNavBar(false);
   }
 
   submitLocation() {
     this.props.navigator.push({
       component: SubmitPage,
       title: 'Submit Page',
-      passProps: { hideBar: this.hideBar.bind(this) },
+      backButtonTitle: 'Return',
+      passProps: {
+        hideBar: this.hideBar.bind(this),
+        handleNavBar: this.props.handleNavBar,
+        location: this.state.location,
+      },
     });
   }
 
@@ -59,6 +70,7 @@ const styles = StyleSheet.create({
     padding: 10,
   },
   logo: {
+    marginTop: 40,
     width: 100,
     height: 100,
   },
