@@ -1,6 +1,9 @@
 # Ignore Plist which contains FB App details
 ios/placesMobile/Info.plist
 
+# Ignore API keys
+App/config/apiKey.js
+
 # OSX
 #
 .DS_Store
