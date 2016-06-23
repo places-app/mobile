@@ -1,3 +1,9 @@
+const FBSDK = require('react-native-fbsdk');
+const {
+  LoginButton,
+  AccessToken,
+} = FBSDK;
+
 import React, { Component } from 'react';
 import {
   Text,
@@ -8,16 +14,22 @@ import {
   TouchableHighlight,
   AlertIOS,
   ActivityIndicatorIOS,
+  NavigatorIOS,
 } from 'react-native';
+
+import MapPage from './MapPage';
+import { setStorage, getStorage } from '../utils/authHelpers';
 
 class Login extends Component {
 
   constructor(props) {
     super(props);
+
     this.state = {
       username: '',
       password: '',
       showProgess: false,
+      fbToken: '',
     };
   }
 
@@ -33,33 +45,36 @@ class Login extends Component {
     });
   }
 
-  handleSubmit() {
-    const username = this.state.username;
-    const password = this.state.password;
-
-    fetch('http://localhost:3000/test',
-      {
-        method: 'POST',
-        body: JSON.stringify({
-          username,
-          password,
-        }),
-        headers: {
-          Accept: 'application/json',
-          'Content-Type': 'application/json',
-        },
-      })
-    .then((response) => response.json())
-    .then((result) => {
-      // console.log('in response', result)
-      AlertIOS.alert(
-          'POST Response',
-          `Username -> + ${result.username} \nPassword -> ${result.password}`,
-          () => this.props.login()
-      );
-    })
-    .done();
+  login() {
+    this.setState({
+      loggedIn: true,
+    });
   }
+
+  handleNavBar(val) {
+    this.props.handleNavBar(val);
+  }
+
+
+  handleSubmit() {
+    this.props.navigator.push({
+      component: MapPage,
+      title: 'Map Page',
+      passProps: { handleNavBar: this.handleNavBar.bind(this) },
+    });
+  }
+
+  handleTest() {
+
+    fetch(`http://localhost:7000/test`)
+      .then(response => console.log(response));
+  }
+
+  logToken() {
+    console.log('token stored: ', getStorage((r)=>console.log(r)))
+    console.log('local token: ', this.props.fbToken)
+  }
+
 
   render() {
     return (
@@ -84,6 +99,65 @@ class Login extends Component {
             Log In
           </Text>
         </TouchableHighlight>
+
+        <TouchableHighlight style={styles.button}>
+          <Text
+            style={styles.buttonText}
+            onPress={() => { this.handleTest(); }}>
+            TEST
+          </Text>
+        </TouchableHighlight>
+
+        <TouchableHighlight style={styles.button}>
+          <Text
+            style={styles.buttonText}
+            onPress={() => { this.logToken(); }}>
+            Display Login Token
+          </Text>
+        </TouchableHighlight>
+
+        <View>
+          <View style={ styles.container }>
+            <LoginButton
+              publishPermissions={["publish_actions"]}
+              onLoginFinished={
+                (error, result) => {
+                  if (error) {
+                    alert("login has error: " + result.error);
+                  } else if (result.isCancelled) {
+                    alert("login is cancelled.");
+                  } else {
+                    AccessToken.getCurrentAccessToken().then(
+                      (data) => {
+                        console.log(data);
+
+                        this.setState({
+                          fbToken: data.accessToken.toString(),
+                        });
+
+                        setStorage(JSON.stringify(data.accessToken), () => {
+                        
+                        });
+
+                        fetch(`http://localhost:7000/auth/facebook/token?access_token=${this.state.fbToken}`)
+                          .then(response => {
+                            this.props.navigator.push({
+                              component: MapPage,
+                              title: 'Map Page',
+                              passProps: { handleNavBar: this.handleNavBar.bind(this) },
+                            });
+                          });
+
+                        // alert(data.accessToken.toString());
+                      }
+                    );
+                  }
+                }
+              }
+              onLogoutFinished={() => alert("logout.")}/>
+          </View>
+        </View>
+
       </View>
     );
   }

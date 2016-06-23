@@ -12,9 +12,8 @@
    NavigatorIOS,
  } from 'react-native';
 
+import { setStorage, getStorage } from './App/utils/authHelpers';
 import Login from './App/components/Login';
-import MapPage from './App/components/MapPage';
-
 
 class placesMobile extends Component {
 
@@ -23,65 +22,42 @@ class placesMobile extends Component {
     this.state = {
       loggedIn: false,
       showNav: true,
+      fbToken: '',
     };
   }
 
-  login() {
-    this.setState({
-      loggedIn: true,
-    });
-  }
+  // componentDidMount() {
+  //   getStorage((fbToken) => {
+  //     if (fbToken) {
+  //       this.setState({
+  //         fbToken,
+  //       });
+  //     }
+  //   });
+  // }
 
   handleNavBar(visible) {
+    console.log('in handle Nave', visible)
     this.setState({
       showNav: visible,
-    })
+    });
+    setTimeout(()=>console.log("STATE", this.state), 1000)
   }
 
   render() {
-    if (this.state.loggedIn === true) {
       return (
         <NavigatorIOS
           style={{
             flex: 1,
           }}
           initialRoute={{
-            component: MapPage,
-            title: 'Map Page',
-            passProps: { handleNavBar: 'testProp' },
+            component: Login,
+            title: 'Login Page',
+            passProps: { handleNavBar: this.handleNavBar.bind(this) },
           }}
-          navigationBarHidden={this.state.showNav}
+          navigationBarHidden={true}
         />
       );
-    } else {
-      return (
-        <View>
-          <Login login={ this.login.bind(this) }/>
-          <View style={ styles.container }>
-            <LoginButton
-              publishPermissions={["publish_actions"]}
-              onLoginFinished={
-                (error, result) => {
-                  if (error) {
-                    alert("login has error: " + result.error);
-                  } else if (result.isCancelled) {
-                    alert("login is cancelled.");
-                  } else {
-                    AccessToken.getCurrentAccessToken().then(
-                      (data) => {
-                        console.log(data)
-                        // this.logged
-                        alert(data.accessToken.toString())
-                      }
-                    )
-                  }
-                }
-              }
-              onLogoutFinished={() => alert("logout.")}/>
-          </View>
-        </View>
-      );
-    }
   }
 }
 
@@ -101,5 +77,7 @@ const styles = StyleSheet.create({
     marginBottom: 5,
   },
 });
+
+export default placesMobile;
 
 AppRegistry.registerComponent('placesMobile', () => placesMobile);

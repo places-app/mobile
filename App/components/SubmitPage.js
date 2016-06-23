@@ -13,16 +13,28 @@ class SubmitPage extends Component {
 
   constructor(props) {
     super(props);
+    console.log(props)
     this.state = {
       username: 'Adam',
       userId: '10',
-      location: this.props.location,
+      location: {
+        name: props.name,
+        lat: props.lat,
+        lng: props.lng,
+      },
       note: '',
       showProgess: false,
     };
   }
 
   componentDidMount() {
+    console.log('MOINT')
+
+    this.props.handleNavBar(false);
+  }
+
+  componentWillUnmount() {
+    console.log('unMOINT')
     this.props.handleNavBar(true);
   }
 
@@ -44,14 +56,14 @@ class SubmitPage extends Component {
     const location = this.state.location;
     const self = this;
     console.log('Clicked!');
-    console.log(`place is: ${this.state.place}
+    console.log(`place is: ${location.name}
       note is: ${this.state.note}`);
     const body = {
       userId,
       location,
       note,
     };
-    const url = `http://localhost:7000/api/users/${userId}/places`;
+    const url = 'http://localhost:7000/test'; //`http://localhost:7000/api/users/${userId}/places`;
     fetch(url, {
       method: 'POST',
       headers: {
@@ -73,35 +85,51 @@ class SubmitPage extends Component {
 
   render() {
     return (
+
       <View style={styles.container}>
-        <Image
-          style={styles.logo}
-          source={{ uri: 'http://2.bp.blogspot.com/-IELsSax8WPg/Tyzsu05V8qI/AAAAAAAAAWU/qbPzat5H2Oc/s400/Map_pin2.png' }}
-        />
-        <Text> Logged In </Text>
-        <Text style={styles.selectedPlace}>
-          {this.props.location}
-        </Text>
-        <TextInput
-          onChangeText={(text) => { this.handleNote(text); }}
-          style={styles.input}
-          placeholder="Note about place"
-        />
-        <TouchableHighlight style={styles.button}>
-          <Text
-            style={styles.buttonText}
-            onPress={() => { this.submitLocation(); }}
+        <View style={styles.nav}>
+          <TouchableHighlight
+            style={styles.navButton}
+            onPress={() => { this.goBack(); }}
           >
-            Submit Place
+            <Text style={styles.navText}>
+              ←
+            </Text>
+          </TouchableHighlight>
+        </View>
+
+        <View style={styles.main}>
+          <Image
+            style={styles.logo}
+            source={{ uri: 'http://2.bp.blogspot.com/-IELsSax8WPg/Tyzsu05V8qI/AAAAAAAAAWU/qbPzat5H2Oc/s400/Map_pin2.png' }}
+          />
+          <Text> Logged In </Text>
+          <Text style={styles.selectedPlace}>
+            {this.state.location.name}
           </Text>
-        </TouchableHighlight>
-        {this.state.showProgess ?
-          <ActivityIndicatorIOS
-            animating={this.state.showProgess}
-            size="large"
-            style={styles.loader}
-          /> : null
-        }
+          <TextInput
+            onChangeText={(text) => { this.handleNote(text); }}
+            style={styles.input}
+            multiline={true}
+            placeholderTextColor="white"
+            placeholder="Note about place"
+          />
+          <TouchableHighlight style={styles.button}>
+            <Text
+              style={styles.buttonText}
+              onPress={() => { this.submitLocation(); }}
+            >
+              Submit Place
+            </Text>
+          </TouchableHighlight>
+          {this.state.showProgess ?
+            <ActivityIndicatorIOS
+              animating={this.state.showProgess}
+              size="large"
+              style={styles.loader}
+            /> : null
+          }
+        </View>
       </View>
     );
   }
@@ -110,8 +138,11 @@ class SubmitPage extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: '#ddccff',
+  },
+  main: {
     alignItems: 'center',
-    backgroundColor: '#F5FCFF',
+    backgroundColor: '#ddccff',
     paddingTop: 40,
     padding: 10,
   },
@@ -123,7 +154,7 @@ const styles = StyleSheet.create({
   button: {
 
     height: 50,
-    backgroundColor: '#48bbec',
+    backgroundColor: '#9966ff',
     alignSelf: 'stretch',
     marginTop: 10,
     alignItems: 'center',
@@ -131,16 +162,19 @@ const styles = StyleSheet.create({
 
   },
   input: {
-    height: 50,
+    backgroundColor: 'white',
+    color: '#9966ff',
+    height: 150,
     marginTop: 10,
     padding: 4,
     fontSize: 18,
     borderWidth: 1,
-    borderColor: '#ff0066',
+    borderColor: '#9966ff',
   },
 
   buttonText: {
     fontSize: 20,
+    color: 'white',
   },
   loader: {
     marginTop: 20,
@@ -151,6 +185,22 @@ const styles = StyleSheet.create({
     marginTop: 30,
     padding: 4,
     fontSize: 18,
+  },
+  nav: {
+    height: 75,
+    backgroundColor: '#9966ff',
+    justifyContent: 'center',
+  },
+
+  navText: {
+    fontSize: 50,
+    color: 'white',
+  },
+
+  navButton: {
+    left: 10,
+    width: 30,
+    justifyContent: 'center',
   },
 
 });
