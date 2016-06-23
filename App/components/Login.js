@@ -66,7 +66,7 @@ class Login extends Component {
 
   handleTest() {
 
-    fetch(`http://localhost:7000/test`)
+    fetch(`http://10.8.28.194:7000/test`)
       .then(response => console.log(response));
   }
 
@@ -139,7 +139,7 @@ class Login extends Component {
                         
                         });
 
-                        fetch(`http://localhost:7000/auth/facebook/token?access_token=${this.state.fbToken}`)
+                        fetch(`http://10.8.28.194:7000/auth/facebook/token?access_token=${this.state.fbToken}`)
                           .then(response => {
                             this.props.navigator.push({
                               component: MapPage,

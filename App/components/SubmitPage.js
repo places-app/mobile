@@ -5,9 +5,13 @@ import {
   View,
   Image,
   TouchableHighlight,
+  TouchableWithoutFeedback,
   TextInput,
   ActivityIndicatorIOS,
 } from 'react-native';
+
+import axios from 'axios';
+import { GOOGLE_API_KEY } from '../config/apiKey';
 
 class SubmitPage extends Component {
 
@@ -28,14 +32,35 @@ class SubmitPage extends Component {
   }
 
   componentDidMount() {
-    console.log('MOINT')
 
-    this.props.handleNavBar(false);
-  }
+    const lat = JSON.stringify(this.state.location.lat);
+    const lng = JSON.stringify(this.state.location.lng);
 
-  componentWillUnmount() {
-    console.log('unMOINT')
-    this.props.handleNavBar(true);
+    const config = {
+
+      url: `https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${lng}&key=${GOOGLE_API_KEY}`,
+
+      method: 'get',
+
+    };
+
+    axios(config).then(({data}) => {
+      let place;
+      if (data.results !== undefined) {
+        place = data.results[0].formatted_address; // need to handle if this is not there
+      } else {
+        place = 'Could not resolve address';
+      }
+
+      this.setState({
+        location: {
+          name: place,
+          lat: this.state.location.lat,
+          lng: this.state.location.lng,
+        },
+      });
+
+    });
   }
 
 
@@ -63,7 +88,7 @@ class SubmitPage extends Component {
       location,
       note,
     };
-    const url = 'http://localhost:7000/test'; //`http://localhost:7000/api/users/${userId}/places`;
+    const url = 'http://10.8.28.194:7000/test'; //`http://localhost:7000/api/users/${userId}/places`;
     fetch(url, {
       method: 'POST',
       headers: {
@@ -103,7 +128,7 @@ class SubmitPage extends Component {
             style={styles.logo}
             source={{ uri: 'http://2.bp.blogspot.com/-IELsSax8WPg/Tyzsu05V8qI/AAAAAAAAAWU/qbPzat5H2Oc/s400/Map_pin2.png' }}
           />
-          <Text> Logged In </Text>
+          <Text> Save Place </Text>
           <Text style={styles.selectedPlace}>
             {this.state.location.name}
           </Text>
@@ -111,13 +136,16 @@ class SubmitPage extends Component {
             onChangeText={(text) => { this.handleNote(text); }}
             style={styles.input}
             multiline={true}
+            blurOnSubmit={true}
             placeholderTextColor="white"
             placeholder="Note about place"
           />
-          <TouchableHighlight style={styles.button}>
+          <TouchableHighlight 
+            style={styles.button}
+            onPress={() => { this.submitLocation(); }}
+          >
             <Text
               style={styles.buttonText}
-              onPress={() => { this.submitLocation(); }}
             >
               Submit Place
             </Text>

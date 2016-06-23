@@ -145,10 +145,13 @@ class MapPage extends Component {
             </Text>
           </TouchableHighlight>
 
-          <TouchableHighlight style={styles.button}>
+          <TouchableHighlight 
+            style={styles.button}
+            onPress={() => { this.submitLocation(); }}
+          >
             <Text
               style={styles.buttonText}
-              onPress={() => { this.submitLocation(); }}>
+            >
               Submit Place
             </Text>
           </TouchableHighlight>
