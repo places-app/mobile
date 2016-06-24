@@ -15,6 +15,8 @@ const {
 import { removeStorage } from '../utils/authHelpers';
 import SubmitPage from './SubmitPage';
 import PlacesMobile from '../../index.ios.js';
+import { GOOGLE_PL_KEY } from '../config/apiKey';
+const { GooglePlacesAutocomplete } = require('react-native-google-places-autocomplete');
 
 class MapPage extends Component {
 
@@ -22,13 +24,15 @@ class MapPage extends Component {
     super(props);
     this.state = {
       showProgess: false,
+      mapCenterLat: 1,
+      mapCenterLng: 1,
       userLat: 1,
       userLng: 1,
       pinLat: 1,
       pinLng: 1,
       delta: 0.00922,
       location: {
-        name: 'placeHolder',
+        name: undefined,
         lat: '40',
         lng: '50',
       },
@@ -42,6 +46,8 @@ class MapPage extends Component {
         this.setState({
           userLng: position.coords.longitude,
           userLat: position.coords.latitude,
+          mapCenterLng: position.coords.longitude,
+          mapCenterLat: position.coords.latitude,
         });
       },
       (error) => alert(error.message),
@@ -51,12 +57,20 @@ class MapPage extends Component {
       this.setState({
         userLng: position.coords.longitude,
         userLat: position.coords.latitude,
+        mapCenterLng: position.coords.longitude,
+        mapCenterLat: position.coords.latitude,
       });
     });
   }
 
   componentWillUnmount() {
     navigator.geolocation.clearWatch(this.watchID);
+  }
+
+  clearName() {
+    this.setState({
+      name: undefined,
+    });
   }
 
   submitLocation() {
@@ -66,9 +80,10 @@ class MapPage extends Component {
       backButtonTitle: 'Return',
       passProps: {
         handleNavBar: this.props.handleNavBar,
-        name: `lat: ${this.state.pinLat} \n long: ${this.state.pinLng}`,
+        name: this.state.name,
         lat: this.state.pinLat,
         lng: this.state.pinLng,
+        clearName: this.clearName.bind(this),
       },
     });
   }
@@ -78,37 +93,38 @@ class MapPage extends Component {
     this.props.navigator.pop();
   }
 
-  center() {
+  centerPin(newLat, newLng) {
     if (this.deltaTracker) {
       this.setState({
         delta: 0.00922,
-        pinLng: this.state.userLng,
-        pinLat: this.state.userLat,
+        pinLng: newLat,
+        pinLat: newLng,
+        mapCenterLng: newLng,
+        mapCenterLat: newLat,
       });
       this.deltaTracker = false;
     } else {
       this.setState({
         delta: 0.00921,
-        pinLng: this.state.userLng,
-        pinLat: this.state.userLat,
+        pinLng: newLat,
+        pinLat: newLng,
+        mapCenterLng: newLng,
+        mapCenterLat: newLat,
       });
       this.deltaTracker = true;
     }
-    // this.setState({
-    //   pinLng: this.state.userLng,
-    //   pinLat: this.state.userLat,
-    // });
   }
 
   render() {
     return (
+
       <View style={styles.container}>
         <MapView
           style={{ height: 800, width: 800 }}
           showsUserLocation={ true }
           region={{
-            latitude: this.state.userLat,
-            longitude: this.state.userLng,
+            latitude: this.state.mapCenterLat,
+            longitude: this.state.mapCenterLng,
             latitudeDelta: this.state.delta,
             longitudeDelta: this.state.delta,
           }}
@@ -129,7 +145,69 @@ class MapPage extends Component {
             tintColor: 'purple',
           }]}
 
-        />
+        /> 
+        <View style={styles.searchContainer}>
+          <GooglePlacesAutocomplete
+                  placeholder='Search'
+                  minLength={2} // minimum length of text to search
+                  autoFocus={false}
+                  fetchDetails={true}
+                  enablePoweredByContainer={false}
+                  onPress={(data, details = null) => { // 'details' is provided when fetchDetails = true
+                    //console.log(data);
+                    console.log(details.name);
+                    console.log(details.geometry.location.lat);
+                    console.log(details.geometry.location.lng);
+
+                    this.setState({
+                      name: details.name,
+                    });
+
+                    this.centerPin(details.geometry.location.lat, details.geometry.location.lng)
+
+                  }}
+                  getDefaultValue={() => {
+                    return ''; // text input default value
+                  }}
+                  query={{
+                    // available options: https://developers.google.com/places/web-service/autocomplete
+                    key: GOOGLE_PL_KEY,
+                    language: 'en', // language of the results
+                    location: { 
+                      latitude: JSON.stringify(this.state.location.lat), 
+                      longitude: JSON.stringify(this.state.location.lng), 
+                    },
+                    radius: '20',                  
+            
+                    //types: '(establishment)', // default: 'geocode'
+                  }}
+                  styles={{
+                    description: {
+                      fontWeight: 'bold',
+                    },
+                    predefinedPlacesDescription: {
+                      color: '#1faadb',
+                    },
+                  }}
+
+                  // currentLocation={true} // Will add a 'Current location' button at the top of the predefined places list
+                  currentLocationLabel="Current location"
+                  nearbyPlacesAPI='GooglePlacesSearch' // Which API to use: GoogleReverseGeocoding or GooglePlacesSearch
+                  GoogleReverseGeocodingQuery={{
+                    // available options for GoogleReverseGeocoding API : https://developers.google.com/maps/documentation/geocoding/intro
+                  }}
+                  GooglePlacesSearchQuery={{
+                    // available options for GooglePlacesSearch API : https://developers.google.com/places/web-service/search
+                    rankby: 'distance',
+                    types: 'food',
+                  }}
+
+
+                  filterReverseGeocodingByTypes={['locality', 'administrative_area_level_3']} // filter the reverse geocoding results by types - ['locality', 'administrative_area_level_3'] if you want to display only cities
+
+                  // predefinedPlaces={[homePlace, workPlace]}
+                />
+            </View>
         <View style={{
           position: 'absolute',
           left: 25,
@@ -140,7 +218,7 @@ class MapPage extends Component {
           <TouchableHighlight style={styles.center}>
             <Text
               style={styles.centerText}
-              onPress={() => { this.center(); }}>
+              onPress={() => { this.centerPin(this.state.userLat, this.state.userLng); }}>
               📍
             </Text>
           </TouchableHighlight>
@@ -166,6 +244,13 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: 'center',
+    backgroundColor: 'transparent',
+  },
+  searchContainer: {
+    left: 25,
+    top: 55,
+    width: 325,
+    position: 'absolute',
     backgroundColor: '#9966ff',
   },
   logo: {

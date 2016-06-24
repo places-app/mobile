@@ -8,7 +8,8 @@
   "dependencies": {
     "react": "^15.1.0",
     "react-native": "0.27.2",
-    "react-native-fbsdk": "^0.2.1"
+    "react-native-fbsdk": "^0.2.1",
+    "react-native-google-places-autocomplete": "^1.1.7"
   },
   "devDependencies": {
     "babel-eslint": "^6.0.4",

@@ -11,7 +11,7 @@ import {
 } from 'react-native';
 
 import axios from 'axios';
-import { GOOGLE_API_KEY } from '../config/apiKey';
+import { GOOGLE_GEO_KEY } from '../config/apiKey';
 
 class SubmitPage extends Component {
 
@@ -33,25 +33,39 @@ class SubmitPage extends Component {
 
   componentDidMount() {
 
-    const lat = JSON.stringify(this.state.location.lat);
-    const lng = JSON.stringify(this.state.location.lng);
+    let place = this.props.name;
+    
+    if (place === undefined) {
+      const lat = JSON.stringify(this.state.location.lat);
+      const lng = JSON.stringify(this.state.location.lng);
 
-    const config = {
+      const config = {
 
-      url: `https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${lng}&key=${GOOGLE_API_KEY}`,
+        url: `https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${lng}&key=${GOOGLE_GEO_KEY}`,
 
-      method: 'get',
+        method: 'get',
 
-    };
+      };
 
-    axios(config).then(({data}) => {
-      let place;
-      if (data.results !== undefined) {
-        place = data.results[0].formatted_address; // need to handle if this is not there
-      } else {
-        place = 'Could not resolve address';
-      }
+      axios(config).then(({data}) => {
+        
+        if (data.results !== undefined) {
+          place = data.results[0].formatted_address; // need to handle if this is not there
+        } else {
+          place = 'Could not resolve address';
+        }
 
+        this.setState({
+          location: {
+            name: place,
+            lat: this.state.location.lat,
+            lng: this.state.location.lng,
+          },
+        });
+
+      });
+
+    } else {
       this.setState({
         location: {
           name: place,
@@ -59,8 +73,7 @@ class SubmitPage extends Component {
           lng: this.state.location.lng,
         },
       });
-
-    });
+    }
   }
 
 
@@ -72,6 +85,7 @@ class SubmitPage extends Component {
 
   goBack() {
     this.props.navigator.pop();
+    this.props.clearName();
   }
 
   submitLocation() {
@@ -110,7 +124,6 @@ class SubmitPage extends Component {
 
   render() {
     return (
-
       <View style={styles.container}>
         <View style={styles.nav}>
           <TouchableHighlight
