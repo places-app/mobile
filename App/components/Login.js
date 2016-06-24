@@ -18,31 +18,17 @@ import {
 } from 'react-native';
 
 import MapPage from './MapPage';
+import axios from 'axios';
 import { setStorage, getStorage } from '../utils/authHelpers';
 
 class Login extends Component {
 
   constructor(props) {
     super(props);
-
     this.state = {
-      username: '',
-      password: '',
       showProgess: false,
       fbToken: '',
     };
-  }
-
-  handlePassword(text) {
-    this.setState({
-      password: text,
-    });
-  }
-
-  handleUsername(text) {
-    this.setState({
-      username: text,
-    });
   }
 
   login() {
@@ -66,7 +52,7 @@ class Login extends Component {
 
   handleTest() {
 
-    fetch(`http://10.8.28.194:7000/test`)
+    fetch(`http://localhost:7000/test`)
       .then(response => console.log(response));
   }
 
@@ -82,15 +68,6 @@ class Login extends Component {
         <Image style={styles.logo}
         source={{ uri:'http://2.bp.blogspot.com/-IELsSax8WPg/Tyzsu05V8qI/AAAAAAAAAWU/qbPzat5H2Oc/s400/Map_pin2.png' }} />
         <Text style={styles.heading}> Places </Text>
-        <TextInput
-          onChangeText={(text) => { this.handleUsername(text); }}
-          style={styles.input}
-          placeholder='Username' />
-        <TextInput
-          onChangeText={(text) => { this.handlePassword(text); }}
-          style={styles.input}
-          placeholder='Password'
-          secureTextEntry={true} />
 
         <TouchableHighlight style={styles.button}>
           <Text
@@ -139,16 +116,23 @@ class Login extends Component {
                         
                         });
 
-                        fetch(`http://10.8.28.194:7000/auth/facebook/token?access_token=${this.state.fbToken}`)
-                          .then(response => {
-                            this.props.navigator.push({
-                              component: MapPage,
-                              title: 'Map Page',
-                              passProps: { handleNavBar: this.handleNavBar.bind(this) },
-                            });
-                          });
+                        const config = {
+                          url: `http://localhost:7000/auth/facebook/token?access_token=${this.state.fbToken}`,
+                          method: 'get',
+                        };
 
-                        // alert(data.accessToken.toString());
+                        axios(config)
+                        .then(({data}) => {
+                          this.props.navigator.push({
+                            component: MapPage,
+                            title: 'Map Page',
+                            passProps: {
+                              handleNavBar: this.handleNavBar.bind(this),
+                              userId: data.id,
+                            },
+                          });
+                        });
+
                       }
                     );
                   }

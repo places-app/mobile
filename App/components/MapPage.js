@@ -14,7 +14,6 @@ const {
 
 import { removeStorage } from '../utils/authHelpers';
 import SubmitPage from './SubmitPage';
-import PlacesMobile from '../../index.ios.js';
 import { GOOGLE_PL_KEY } from '../config/apiKey';
 const { GooglePlacesAutocomplete } = require('react-native-google-places-autocomplete');
 
@@ -79,6 +78,7 @@ class MapPage extends Component {
       title: 'Submit Page',
       backButtonTitle: 'Return',
       passProps: {
+        userId: this.props.userId,
         handleNavBar: this.props.handleNavBar,
         name: this.state.name,
         lat: this.state.pinLat,
@@ -174,8 +174,8 @@ class MapPage extends Component {
                     key: GOOGLE_PL_KEY,
                     language: 'en', // language of the results
                     location: { 
-                      latitude: JSON.stringify(this.state.location.lat), 
-                      longitude: JSON.stringify(this.state.location.lng), 
+                      latitude: JSON.stringify(this.state.location.lat),
+                      longitude: JSON.stringify(this.state.location.lng),
                     },
                     radius: '20',                  
             

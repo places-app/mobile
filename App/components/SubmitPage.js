@@ -5,7 +5,6 @@ import {
   View,
   Image,
   TouchableHighlight,
-  TouchableWithoutFeedback,
   TextInput,
   ActivityIndicatorIOS,
 } from 'react-native';
@@ -20,7 +19,7 @@ class SubmitPage extends Component {
     console.log(props)
     this.state = {
       username: 'Adam',
-      userId: '10',
+      userId: this.props.userId,
       location: {
         name: props.name,
         lat: props.lat,
@@ -102,7 +101,7 @@ class SubmitPage extends Component {
       location,
       note,
     };
-    const url = 'http://10.8.28.194:7000/test'; //`http://localhost:7000/api/users/${userId}/places`;
+    const url = 'http://localhost:7000/test'; //`http://localhost:7000/api/users/${userId}/places`;
     fetch(url, {
       method: 'POST',
       headers: {
