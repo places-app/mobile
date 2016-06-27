@@ -16,7 +16,7 @@ class SubmitPage extends Component {
 
   constructor(props) {
     super(props);
-    console.log(props)
+    console.log(props);
     this.state = {
       username: 'Adam',
       userId: this.props.userId,
@@ -30,10 +30,9 @@ class SubmitPage extends Component {
     };
   }
 
-  componentDidMount() {
-
+  componentWillMount() {
     let place = this.props.name;
-    
+
     if (place === undefined) {
       const lat = JSON.stringify(this.state.location.lat);
       const lng = JSON.stringify(this.state.location.lng);
@@ -46,8 +45,8 @@ class SubmitPage extends Component {
 
       };
 
-      axios(config).then(({data}) => {
-        
+      axios(config)
+      .then(({ data }) => {
         if (data.results !== undefined) {
           place = data.results[0].formatted_address; // need to handle if this is not there
         } else {
@@ -61,9 +60,7 @@ class SubmitPage extends Component {
             lng: this.state.location.lng,
           },
         });
-
       });
-
     } else {
       this.setState({
         location: {
@@ -74,7 +71,6 @@ class SubmitPage extends Component {
       });
     }
   }
-
 
   handleNote(text) {
     this.setState({
@@ -101,7 +97,7 @@ class SubmitPage extends Component {
       location,
       note,
     };
-    const url = 'http://localhost:7000/test'; //`http://localhost:7000/api/users/${userId}/places`;
+    const url = 'http://localhost:7000/test'; // `http://localhost:7000/api/users/${userId}/places`;
     fetch(url, {
       method: 'POST',
       headers: {
@@ -147,12 +143,12 @@ class SubmitPage extends Component {
           <TextInput
             onChangeText={(text) => { this.handleNote(text); }}
             style={styles.input}
-            multiline={true}
-            blurOnSubmit={true}
+            multiline
+            blurOnSubmit
             placeholderTextColor="white"
             placeholder="Note about place"
           />
-          <TouchableHighlight 
+          <TouchableHighlight
             style={styles.button}
             onPress={() => { this.submitLocation(); }}
           >
@@ -192,14 +188,12 @@ const styles = StyleSheet.create({
     height: 100,
   },
   button: {
-
     height: 50,
     backgroundColor: '#9966ff',
     alignSelf: 'stretch',
     marginTop: 10,
     alignItems: 'center',
     justifyContent: 'center',
-
   },
   input: {
     backgroundColor: 'white',
@@ -247,8 +241,12 @@ const styles = StyleSheet.create({
 
 SubmitPage.propTypes = {
   location: React.PropTypes.object,
-  handleNavBar: React.PropTypes.func,
   navigator: React.PropTypes.object,
+  clearName: React.PropTypes.func,
+  userId: React.PropTypes.number,
+  name: React.PropTypes.string,
+  lat: React.PropTypes.number,
+  lng: React.PropTypes.number,
 };
 
 export default SubmitPage;

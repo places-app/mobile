@@ -1,8 +1,5 @@
 const FBSDK = require('react-native-fbsdk');
-const {
-  LoginButton,
-  AccessToken,
-} = FBSDK;
+const { LoginButton, AccessToken } = FBSDK;
 
 import React, { Component } from 'react';
 import {
@@ -10,11 +7,7 @@ import {
   StyleSheet,
   View,
   Image,
-  TextInput,
   TouchableHighlight,
-  AlertIOS,
-  ActivityIndicatorIOS,
-  NavigatorIOS,
 } from 'react-native';
 
 import MapPage from './MapPage';
@@ -31,48 +24,45 @@ class Login extends Component {
     };
   }
 
-  login() {
-    this.setState({
-      loggedIn: true,
-    });
-  }
-
-  handleNavBar(val) {
-    this.props.handleNavBar(val);
-  }
-
+  // login() {
+  //   this.setState({
+  //     loggedIn: true,
+  //   });
+  // }
 
   handleSubmit() {
     this.props.navigator.push({
       component: MapPage,
       title: 'Map Page',
-      passProps: { handleNavBar: this.handleNavBar.bind(this) },
     });
   }
 
-  handleTest() {
+  // handleTest() {
 
-    fetch(`http://localhost:7000/test`)
-      .then(response => console.log(response));
-  }
+  //   fetch(`http://localhost:7000/test`)
+  //     .then(response => console.log(response));
+  // }
 
-  logToken() {
-    console.log('token stored: ', getStorage((r)=>console.log(r)))
-    console.log('local token: ', this.props.fbToken)
-  }
+  // logToken() {
+  //   console.log('token stored: ', getStorage((r)=>console.log(r)))
+  //   console.log('local token: ', this.props.fbToken)
+  // }
 
 
   render() {
     return (
       <View style={styles.container}>
-        <Image style={styles.logo}
-        source={{ uri:'http://2.bp.blogspot.com/-IELsSax8WPg/Tyzsu05V8qI/AAAAAAAAAWU/qbPzat5H2Oc/s400/Map_pin2.png' }} />
+        <Image
+          style={styles.logo}
+          source={{ uri: 'http://2.bp.blogspot.com/-IELsSax8WPg/Tyzsu05V8qI/AAAAAAAAAWU/qbPzat5H2Oc/s400/Map_pin2.png' }}
+        />
         <Text style={styles.heading}> Places </Text>
 
         <TouchableHighlight style={styles.button}>
           <Text
             style={styles.buttonText}
-            onPress={() => { this.handleSubmit(); }}>
+            onPress={() => { this.handleSubmit(); }}
+          >
             Log In
           </Text>
         </TouchableHighlight>
@@ -80,7 +70,8 @@ class Login extends Component {
         <TouchableHighlight style={styles.button}>
           <Text
             style={styles.buttonText}
-            onPress={() => { this.handleTest(); }}>
+            onPress={() => { this.handleTest(); }}
+          >
             TEST
           </Text>
         </TouchableHighlight>
@@ -88,33 +79,33 @@ class Login extends Component {
         <TouchableHighlight style={styles.button}>
           <Text
             style={styles.buttonText}
-            onPress={() => { this.logToken(); }}>
+            onPress={() => { this.logToken(); }}
+          >
             Display Login Token
           </Text>
         </TouchableHighlight>
 
         <View>
-          <View style={ styles.container }>
+          <View style={styles.container}>
             <LoginButton
-              publishPermissions={["publish_actions"]}
+              publishPermissions={['publish_actions']}
               onLoginFinished={
                 (error, result) => {
                   if (error) {
-                    alert("login has error: " + result.error);
+                    alert(`login has error: ${result.error}`);
                   } else if (result.isCancelled) {
-                    alert("login is cancelled.");
+                    alert('login is cancelled.');
                   } else {
                     AccessToken.getCurrentAccessToken().then(
-                      (data) => {
-                        console.log(data);
+                      (fbRes) => {
+                        console.log(fbRes);
 
                         this.setState({
-                          fbToken: data.accessToken.toString(),
+                          fbToken: fbRes.accessToken.toString(),
                         });
 
-                        setStorage(JSON.stringify(data.accessToken), () => {
-                        
-                        });
+                        // setStorage(JSON.stringify(fbRes.accessToken), () => {        
+                        // });
 
                         const config = {
                           url: `http://localhost:7000/auth/facebook/token?access_token=${this.state.fbToken}`,
@@ -122,23 +113,22 @@ class Login extends Component {
                         };
 
                         axios(config)
-                        .then(({data}) => {
+                        .then(({ data }) => {
                           this.props.navigator.push({
                             component: MapPage,
                             title: 'Map Page',
                             passProps: {
-                              handleNavBar: this.handleNavBar.bind(this),
                               userId: data.id,
                             },
                           });
                         });
-
                       }
                     );
                   }
                 }
               }
-              onLogoutFinished={() => alert("logout.")}/>
+              onLogoutFinished={() => alert('logout.')}
+            />
           </View>
         </View>
 
@@ -187,5 +177,9 @@ const styles = StyleSheet.create({
   },
 
 });
+
+Login.propTypes = {
+  navigator: React.PropTypes.object,
+};
 
 export default Login;

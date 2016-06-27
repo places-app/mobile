@@ -7,11 +7,6 @@ import {
   MapView,
 } from 'react-native';
 
-const FBSDK = require('react-native-fbsdk');
-const {
-  LoginButton,
-} = FBSDK;
-
 import { removeStorage } from '../utils/authHelpers';
 import SubmitPage from './SubmitPage';
 import { GOOGLE_PL_KEY } from '../config/apiKey';
@@ -39,7 +34,7 @@ class MapPage extends Component {
     this.deltaTracker = false;
   }
 
-  componentDidMount() {
+  componentWillMount() {
     navigator.geolocation.getCurrentPosition(
       (position) => {
         this.setState({
@@ -79,7 +74,6 @@ class MapPage extends Component {
       backButtonTitle: 'Return',
       passProps: {
         userId: this.props.userId,
-        handleNavBar: this.props.handleNavBar,
         name: this.state.name,
         lat: this.state.pinLat,
         lng: this.state.pinLng,
@@ -89,7 +83,7 @@ class MapPage extends Component {
   }
 
   handleLogout() {
-    removeStorage();
+    // removeStorage();
     this.props.navigator.pop();
   }
 
@@ -121,7 +115,7 @@ class MapPage extends Component {
       <View style={styles.container}>
         <MapView
           style={{ height: 800, width: 800 }}
-          showsUserLocation={ true }
+          showsUserLocation
           region={{
             latitude: this.state.mapCenterLat,
             longitude: this.state.mapCenterLng,
@@ -145,85 +139,72 @@ class MapPage extends Component {
             tintColor: 'purple',
           }]}
 
-        /> 
+        />
         <View style={styles.searchContainer}>
           <GooglePlacesAutocomplete
-                  placeholder='Search'
-                  minLength={2} // minimum length of text to search
-                  autoFocus={false}
-                  fetchDetails={true}
-                  enablePoweredByContainer={false}
-                  onPress={(data, details = null) => { // 'details' is provided when fetchDetails = true
-                    //console.log(data);
-                    console.log(details.name);
-                    console.log(details.geometry.location.lat);
-                    console.log(details.geometry.location.lng);
+            placeholder='Search'
+            minLength={2} // minimum length of text to search
+            autoFocus={false}
+            fetchDetails
+            enablePoweredByContainer={false}
+            onPress={(data, details = null) => { // 'details' is provided when fetchDetails = true
+              // console.log(data);
+              // console.log(details.name);
+              // console.log(details.geometry.location.lat);
+              // console.log(details.geometry.location.lng);
 
-                    this.setState({
-                      name: details.name,
-                    });
+              this.setState({
+                name: details.name,
+              });
 
-                    this.centerPin(details.geometry.location.lat, details.geometry.location.lng)
+              this.centerPin(details.geometry.location.lat, details.geometry.location.lng);
+            }}
+            getDefaultValue={() => ''} // text input default value
+            query={{
+              // available options: https://developers.google.com/places/web-service/autocomplete
+              key: GOOGLE_PL_KEY,
+              language: 'en', // language of the results
+              location: {
+                latitude: JSON.stringify(this.state.location.lat),
+                longitude: JSON.stringify(this.state.location.lng),
+              },
+              radius: '20',           
+              // types: '(establishment)', // default: 'geocode'
+            }}
+            styles={{
+              description: {
+                fontWeight: 'bold',
+              },
+              predefinedPlacesDescription: {
+                color: '#1faadb',
+              },
+            }}
+            nearbyPlacesAPI='GooglePlacesSearch' // Which API to use: GooglePlacesSearch
+            GooglePlacesSearchQuery={{
+              // available options for GooglePlacesSearch API : https://developers.google.com/places/web-service/search
+              rankby: 'distance',
+              types: 'food',
+            }}
 
-                  }}
-                  getDefaultValue={() => {
-                    return ''; // text input default value
-                  }}
-                  query={{
-                    // available options: https://developers.google.com/places/web-service/autocomplete
-                    key: GOOGLE_PL_KEY,
-                    language: 'en', // language of the results
-                    location: { 
-                      latitude: JSON.stringify(this.state.location.lat),
-                      longitude: JSON.stringify(this.state.location.lng),
-                    },
-                    radius: '20',                  
-            
-                    //types: '(establishment)', // default: 'geocode'
-                  }}
-                  styles={{
-                    description: {
-                      fontWeight: 'bold',
-                    },
-                    predefinedPlacesDescription: {
-                      color: '#1faadb',
-                    },
-                  }}
-
-                  // currentLocation={true} // Will add a 'Current location' button at the top of the predefined places list
-                  currentLocationLabel="Current location"
-                  nearbyPlacesAPI='GooglePlacesSearch' // Which API to use: GoogleReverseGeocoding or GooglePlacesSearch
-                  GoogleReverseGeocodingQuery={{
-                    // available options for GoogleReverseGeocoding API : https://developers.google.com/maps/documentation/geocoding/intro
-                  }}
-                  GooglePlacesSearchQuery={{
-                    // available options for GooglePlacesSearch API : https://developers.google.com/places/web-service/search
-                    rankby: 'distance',
-                    types: 'food',
-                  }}
-
-
-                  filterReverseGeocodingByTypes={['locality', 'administrative_area_level_3']} // filter the reverse geocoding results by types - ['locality', 'administrative_area_level_3'] if you want to display only cities
-
-                  // predefinedPlaces={[homePlace, workPlace]}
-                />
-            </View>
+            // predefinedPlaces={[homePlace, workPlace]}
+          />
+        </View>
         <View style={{
           position: 'absolute',
           left: 25,
           top: 525,
           backgroundColor: 'transparent',
         }}>
-          
           <TouchableHighlight style={styles.center}>
             <Text
               style={styles.centerText}
-              onPress={() => { this.centerPin(this.state.userLat, this.state.userLng); }}>
+              onPress={() => { this.centerPin(this.state.userLat, this.state.userLng); }}
+            >
               📍
             </Text>
           </TouchableHighlight>
 
-          <TouchableHighlight 
+          <TouchableHighlight
             style={styles.button}
             onPress={() => { this.submitLocation(); }}
           >
@@ -292,5 +273,10 @@ const styles = StyleSheet.create({
   },
 
 });
+
+MapPage.propTypes = {
+  navigator: React.PropTypes.object,
+  userId: React.PropTypes.number,
+};
 
 export default MapPage;
