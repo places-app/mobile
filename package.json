@@ -12,7 +12,8 @@
     "react-native-camera": "git+https://github.com/lwansbrough/react-native-camera.git",
     "react-native-fbsdk": "^0.2.1",
     "react-native-file-transfer": "0.0.3",
-    "react-native-google-places-autocomplete": "^1.1.7"
+    "react-native-google-places-autocomplete": "^1.1.7",
+    "react-native-background-geolocation": "^1.1.0"
   },
   "devDependencies": {
     "babel-eslint": "^6.0.4",
