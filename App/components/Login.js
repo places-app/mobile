@@ -108,7 +108,7 @@ class Login extends Component {
                         // });
 
                         const config = {
-                          url: `http://localhost:7000/auth/facebook/token?access_token=${this.state.fbToken}`,
+                          url: `http://162.243.211.18:7000/auth/facebook/token?access_token=${this.state.fbToken}`,
                           method: 'get',
                         };
 

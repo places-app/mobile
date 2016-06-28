@@ -97,7 +97,7 @@ class SubmitPage extends Component {
       location,
       note,
     };
-    const url = 'http://localhost:7000/test'; // `http://localhost:7000/api/users/${userId}/places`;
+    const url = `http://162.243.211.18:7000/api/users/${this.state.userId}/places`; // `http://localhost:7000/api/users/${userId}/places`;
     fetch(url, {
       method: 'POST',
       headers: {
@@ -107,7 +107,7 @@ class SubmitPage extends Component {
     })
     .then((response) => {
       console.log(response);
-      if (response.status === 200) {
+      if (response.status === 201 || response.status === 202) {
         self.setState({ showProgess: false });
         self.goBack();
       }
