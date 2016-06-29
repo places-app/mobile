@@ -26,6 +26,7 @@ class MapPage extends Component {
       pinLng: 1,
       delta: 0.00922,
       location: {
+        gPlaceId: undefined,
         name: undefined,
         lat: '40',
         lng: '50',
@@ -74,6 +75,7 @@ class MapPage extends Component {
       backButtonTitle: 'Return',
       passProps: {
         userId: this.props.userId,
+        gPlaceId: this.state.gPlaceId,
         name: this.state.name,
         lat: this.state.pinLat,
         lng: this.state.pinLng,
@@ -142,18 +144,20 @@ class MapPage extends Component {
         />
         <View style={styles.searchContainer}>
           <GooglePlacesAutocomplete
-            placeholder='Search'
+            placeholder="Search"
             minLength={2} // minimum length of text to search
             autoFocus={false}
             fetchDetails
             enablePoweredByContainer={false}
             onPress={(data, details = null) => { // 'details' is provided when fetchDetails = true
               // console.log(data);
+              console.log(data.id);
               // console.log(details.name);
               // console.log(details.geometry.location.lat);
               // console.log(details.geometry.location.lng);
 
               this.setState({
+                gPlaceId: data.id,
                 name: details.name,
               });
 
@@ -168,7 +172,7 @@ class MapPage extends Component {
                 latitude: JSON.stringify(this.state.location.lat),
                 longitude: JSON.stringify(this.state.location.lng),
               },
-              radius: '20',           
+              radius: '20',
               // types: '(establishment)', // default: 'geocode'
             }}
             styles={{
@@ -179,7 +183,7 @@ class MapPage extends Component {
                 color: '#1faadb',
               },
             }}
-            nearbyPlacesAPI='GooglePlacesSearch' // Which API to use: GooglePlacesSearch
+            nearbyPlacesAPI="GooglePlacesSearch" // Which API to use: GooglePlacesSearch
             GooglePlacesSearchQuery={{
               // available options for GooglePlacesSearch API : https://developers.google.com/places/web-service/search
               rankby: 'distance',
