@@ -104,11 +104,13 @@ class Login extends Component {
                           fbToken: fbRes.accessToken.toString(),
                         });
 
-                        // setStorage(JSON.stringify(fbRes.accessToken), () => {        
+                        // setStorage(JSON.stringify(fbRes.accessToken), () => {
                         // });
 
                         const config = {
-                          url: `http://162.243.211.18:7000/auth/facebook/token?access_token=${this.state.fbToken}`,
+                          // uncomment for deployed live server
+                          // url: `http://162.243.211.18:7000/auth/facebook/token?access_token=${this.state.fbToken}`,
+                          url: `http://localhost:7000/auth/facebook/token?access_token=${this.state.fbToken}`,
                           method: 'get',
                         };
 

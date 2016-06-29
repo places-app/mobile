@@ -21,6 +21,7 @@ class SubmitPage extends Component {
       username: 'Adam',
       userId: this.props.userId,
       location: {
+        gPlaceId: props.gPlaceId,
         name: props.name,
         lat: props.lat,
         lng: props.lng,
@@ -62,8 +63,10 @@ class SubmitPage extends Component {
         });
       });
     } else {
+      // double check ** might be redundant to setting state during initialization
       this.setState({
         location: {
+          gPlaceId: this.state.location.gPlaceId,
           name: place,
           lat: this.state.location.lat,
           lng: this.state.location.lng,
@@ -91,13 +94,16 @@ class SubmitPage extends Component {
     const self = this;
     console.log('Clicked!');
     console.log(`place is: ${location.name}
-      note is: ${this.state.note}`);
+      note is: ${this.state.note}
+      id is: ${location.gPlaceId}`);
     const body = {
       userId,
       location,
       note,
     };
-    const url = `http://162.243.211.18:7000/api/users/${this.state.userId}/places`; // `http://localhost:7000/api/users/${userId}/places`;
+    // uncomment for deployed live server
+    // const url = `http://162.243.211.18:7000/api/users/${userId}/places`;
+    const url = `http://localhost:7000/api/users/${userId}/places`;
     fetch(url, {
       method: 'POST',
       headers: {
@@ -244,6 +250,7 @@ SubmitPage.propTypes = {
   navigator: React.PropTypes.object,
   clearName: React.PropTypes.func,
   userId: React.PropTypes.number,
+  gPlaceId: React.PropTypes.string,
   name: React.PropTypes.string,
   lat: React.PropTypes.number,
   lng: React.PropTypes.number,
