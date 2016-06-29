@@ -25,6 +25,9 @@
 		5EC075341D152CA5009BFD53 /* FBSDKLoginKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5EC075311D152CA5009BFD53 /* FBSDKLoginKit.framework */; };
 		5EC075351D152CA5009BFD53 /* FBSDKShareKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5EC075321D152CA5009BFD53 /* FBSDKShareKit.framework */; };
 		5EC0761D1D153321009BFD53 /* Bolts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5EC0761C1D153321009BFD53 /* Bolts.framework */; };
+		665717AA1D21AFC300A0B1EB /* libRNBackgroundGeolocation.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 665717A71D21AF7100A0B1EB /* libRNBackgroundGeolocation.a */; };
+		665717AE1D21B02300A0B1EB /* TSLocationManager.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 665717AD1D21B02300A0B1EB /* TSLocationManager.framework */; };
+		665717B01D21B05100A0B1EB /* libsqlite3.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 665717AF1D21B05000A0B1EB /* libsqlite3.tbd */; };
 		832341BD1AAA6AB300B99B32 /* libRCTText.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 832341B51AAA6A8300B99B32 /* libRCTText.a */; };
 		8AF1E40F684346EB91F261EA /* libRCTFBSDK.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 72DE4053204E45869564E5AB /* libRCTFBSDK.a */; };
 /* End PBXBuildFile section */
@@ -100,6 +103,20 @@
 			remoteGlobalIDString = 9350E0F11CE3B0920041D815;
 			remoteInfo = RCTFBSDK;
 		};
+		665717A61D21AF7100A0B1EB /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 665717961D21AF7100A0B1EB /* RNBackgroundGeolocation.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 83FF5F851AFD0D2B0016A13E;
+			remoteInfo = RNBackgroundGeolocation;
+		};
+		665717A81D21AF7100A0B1EB /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 665717961D21AF7100A0B1EB /* RNBackgroundGeolocation.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 83FF5F901AFD0D2B0016A13E;
+			remoteInfo = RNBackgroundGeolocationTests;
+		};
 		78C398B81ACF4ADC00677621 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 78C398B01ACF4ADC00677621 /* RCTLinking.xcodeproj */;
@@ -141,6 +158,10 @@
 		5EC075311D152CA5009BFD53 /* FBSDKLoginKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = FBSDKLoginKit.framework; sourceTree = "<group>"; };
 		5EC075321D152CA5009BFD53 /* FBSDKShareKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = FBSDKShareKit.framework; sourceTree = "<group>"; };
 		5EC0761C1D153321009BFD53 /* Bolts.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Bolts.framework; sourceTree = "<group>"; };
+		665717961D21AF7100A0B1EB /* RNBackgroundGeolocation.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RNBackgroundGeolocation.xcodeproj; path = "../node_modules/react-native-background-geolocation/RNBackgroundGeolocation.xcodeproj"; sourceTree = "<group>"; };
+		665717AB1D21AFF200A0B1EB /* RNBackgroundGeolocation */ = {isa = PBXFileReference; lastKnownFileType = folder; name = RNBackgroundGeolocation; path = "../node_modules/react-native-background-geolocation/RNBackgroundGeolocation"; sourceTree = "<group>"; };
+		665717AD1D21B02300A0B1EB /* TSLocationManager.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = TSLocationManager.framework; path = "../node_modules/react-native-background-geolocation/RNBackgroundGeolocation/TSLocationManager.framework"; sourceTree = "<group>"; };
+		665717AF1D21B05000A0B1EB /* libsqlite3.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libsqlite3.tbd; path = usr/lib/libsqlite3.tbd; sourceTree = SDKROOT; };
 		72DE4053204E45869564E5AB /* libRCTFBSDK.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRCTFBSDK.a; sourceTree = "<group>"; };
 		78C398B01ACF4ADC00677621 /* RCTLinking.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTLinking.xcodeproj; path = "../node_modules/react-native/Libraries/LinkingIOS/RCTLinking.xcodeproj"; sourceTree = "<group>"; };
 		832341B01AAA6A8300B99B32 /* RCTText.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTText.xcodeproj; path = "../node_modules/react-native/Libraries/Text/RCTText.xcodeproj"; sourceTree = "<group>"; };
@@ -158,6 +179,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				665717B01D21B05100A0B1EB /* libsqlite3.tbd in Frameworks */,
+				665717AE1D21B02300A0B1EB /* TSLocationManager.framework in Frameworks */,
+				665717AA1D21AFC300A0B1EB /* libRNBackgroundGeolocation.a in Frameworks */,
 				5EC0761D1D153321009BFD53 /* Bolts.framework in Frameworks */,
 				146834051AC3E58100842450 /* libReact.a in Frameworks */,
 				5EC075331D152CA5009BFD53 /* FBSDKCoreKit.framework in Frameworks */,
@@ -285,12 +309,24 @@
 		5EC075361D152CAC009BFD53 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				665717AF1D21B05000A0B1EB /* libsqlite3.tbd */,
+				665717AD1D21B02300A0B1EB /* TSLocationManager.framework */,
+				665717AB1D21AFF200A0B1EB /* RNBackgroundGeolocation */,
 				5EC0761C1D153321009BFD53 /* Bolts.framework */,
 				5EC075301D152CA5009BFD53 /* FBSDKCoreKit.framework */,
 				5EC075311D152CA5009BFD53 /* FBSDKLoginKit.framework */,
 				5EC075321D152CA5009BFD53 /* FBSDKShareKit.framework */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		665717971D21AF7100A0B1EB /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				665717A71D21AF7100A0B1EB /* libRNBackgroundGeolocation.a */,
+				665717A91D21AF7100A0B1EB /* RNBackgroundGeolocationTests.xctest */,
+			);
+			name = Products;
 			sourceTree = "<group>";
 		};
 		78C398B11ACF4ADC00677621 /* Products */ = {
@@ -330,6 +366,7 @@
 		83CBB9F61A601CBA00E9B192 = {
 			isa = PBXGroup;
 			children = (
+				665717961D21AF7100A0B1EB /* RNBackgroundGeolocation.xcodeproj */,
 				13B07FAE1A68108700A75B9A /* placesMobile */,
 				832341AE1AAA6A7D00B99B32 /* Libraries */,
 				00E356EF1AD99517003FC87E /* placesMobileTests */,
@@ -401,6 +438,13 @@
 						CreatedOnToolsVersion = 6.2;
 						TestTargetID = 13B07F861A680F5B00A75B9A;
 					};
+					13B07F861A680F5B00A75B9A = {
+						SystemCapabilities = {
+							com.apple.BackgroundModes = {
+								enabled = 1;
+							};
+						};
+					};
 				};
 			};
 			buildConfigurationList = 83CBB9FA1A601CBA00E9B192 /* Build configuration list for PBXProject "placesMobile" */;
@@ -458,6 +502,10 @@
 				{
 					ProductGroup = 146834001AC3E56700842450 /* Products */;
 					ProjectRef = 146833FF1AC3E56700842450 /* React.xcodeproj */;
+				},
+				{
+					ProductGroup = 665717971D21AF7100A0B1EB /* Products */;
+					ProjectRef = 665717961D21AF7100A0B1EB /* RNBackgroundGeolocation.xcodeproj */;
 				},
 			);
 			projectRoot = "";
@@ -530,6 +578,20 @@
 			fileType = archive.ar;
 			path = libRCTFBSDK.a;
 			remoteRef = 5E2149F01D14E57B006C15F5 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		665717A71D21AF7100A0B1EB /* libRNBackgroundGeolocation.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libRNBackgroundGeolocation.a;
+			remoteRef = 665717A61D21AF7100A0B1EB /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		665717A91D21AF7100A0B1EB /* RNBackgroundGeolocationTests.xctest */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.cfbundle;
+			path = RNBackgroundGeolocationTests.xctest;
+			remoteRef = 665717A81D21AF7100A0B1EB /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		78C398B91ACF4ADC00677621 /* libRCTLinking.a */ = {
@@ -672,6 +734,7 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
+					"$(PROJECT_DIR)/../node_modules/react-native-background-geolocation/**",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
@@ -682,6 +745,7 @@
 				);
 				INFOPLIST_FILE = placesMobile/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks ~/Documents/FacebookSDK";
+				New_Setting = "";
 				OTHER_LDFLAGS = (
 					"-ObjC",
 					"-lc++",
@@ -699,6 +763,7 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
+					"$(PROJECT_DIR)/../node_modules/react-native-background-geolocation/**",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
@@ -709,6 +774,7 @@
 				);
 				INFOPLIST_FILE = placesMobile/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) /Users/jsamuelt/Documents/iOS ~/Documents/FacebookSDK @executable_path/Frameworks";
+				New_Setting = "";
 				OTHER_LDFLAGS = (
 					"-ObjC",
 					"$(inherited)",

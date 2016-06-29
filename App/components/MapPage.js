@@ -5,12 +5,17 @@ import {
   View,
   TouchableHighlight,
   MapView,
+  Alert,
 } from 'react-native';
 
 import { removeStorage } from '../utils/authHelpers';
 import SubmitPage from './SubmitPage';
 import { GOOGLE_PL_KEY } from '../config/apiKey';
 const { GooglePlacesAutocomplete } = require('react-native-google-places-autocomplete');
+const BackgroundGeolocation = require('react-native-background-geolocation');
+
+// const host = '162.243.211.18';
+const host = 'localhost';
 
 class MapPage extends Component {
 
@@ -33,6 +38,77 @@ class MapPage extends Component {
       },
     };
     this.deltaTracker = false;
+    BackgroundGeolocation.stop();
+    BackgroundGeolocation.configure({
+      desiredAccuracy: 0,
+      stationaryRadius: 20,
+      distanceFilter: 40,
+      disableElasticity: false, // <-- [iOS] Default is 'false'.  Set true to disable speed-based distanceFilter elasticity
+      // locationUpdateInterval: 5000,
+      minimumActivityRecognitionConfidence: 80,   // 0-100%.  Minimum activity-confidence for a state-change 
+      // fastestLocationUpdateInterval: 5000,
+      activityRecognitionInterval: 10000,
+      stopDetectionDelay: 1,  // <--  minutes to delay after motion stops before engaging stop-detection system
+      stopTimeout: 2, // 2 minutes
+      activityType: 'AutomotiveNavigation',
+
+      // Application config
+      debug: true, // <-- enable this hear sounds for background-geolocation life-cycle.
+      // forceReloadOnLocationChange: false,
+      // forceReloadOnMotionChange: false,
+      // forceReloadOnGeofence: false,
+      stopOnTerminate: false,
+      startOnBoot: true,
+
+      // HTTP / SQLite config
+      url: `http://${host}:7000/api/users/${this.props.userId}`,
+      batchSync: false,       // Set true to sync locations to server in a single HTTP request.
+      autoSync: true,         // Set true to sync each location to server as it arrives.
+      maxDaysToPersist: 1,
+      headers: {
+        // 'X-FOO': 'bar',
+      },
+      params: {
+        // auth_token: 'parameters_from_client',
+      },
+    });
+
+    // This handler fires whenever bgGeo receives a location update.
+    BackgroundGeolocation.on('location', function(location) {
+      const coords = location.coords;
+      // Alert.alert(`location event registerd! Coords are: ${coords}`);
+      console.log('- [js]location: ', JSON.stringify(location));
+    });
+
+    // This handler fires whenever bgGeo receives an error
+    BackgroundGeolocation.on('error', function(error) {
+      var type = error.type;
+      var code = error.code;
+      alert(type + " Error: " + code);
+    });
+
+    BackgroundGeolocation.on('http', function(response) {
+        var status = response.status;
+
+        console.log("- HTTP success", status);
+
+    });
+
+    // This handler fires when movement states changes (stationary->moving; moving->stationary)
+    // BackgroundGeolocation.on('motionchange', function(location) {
+    //     console.log('- [js]motionchanged: ', JSON.stringify(location));
+    // });
+
+    BackgroundGeolocation.start(function() {
+      console.log('- [js] BackgroundGeolocation started successfully');
+
+      // Fetch current position
+      BackgroundGeolocation.getCurrentPosition({timeout: 30}, function(location) {
+        console.log('- [js] BackgroundGeolocation received current position: ', JSON.stringify(location));
+      }, function(error) {
+        alert("Location error: " + error);
+      });
+    });
   }
 
   componentWillMount() {
