@@ -9,6 +9,7 @@ import {
 
 import { removeStorage } from '../utils/authHelpers';
 import SubmitPage from './SubmitPage';
+import CameraPage from './CameraPage';
 import { GOOGLE_PL_KEY } from '../config/apiKey';
 const { GooglePlacesAutocomplete } = require('react-native-google-places-autocomplete');
 
@@ -72,6 +73,22 @@ class MapPage extends Component {
     this.props.navigator.push({
       component: SubmitPage,
       title: 'Submit Page',
+      backButtonTitle: 'Return',
+      passProps: {
+        userId: this.props.userId,
+        gPlaceId: this.state.gPlaceId,
+        name: this.state.name,
+        lat: this.state.pinLat,
+        lng: this.state.pinLng,
+        clearName: this.clearName.bind(this),
+      },
+    });
+  }
+
+  submitWithCamera() {
+    this.props.navigator.push({
+      component: CameraPage,
+      title: 'Camera Page',
       backButtonTitle: 'Return',
       passProps: {
         userId: this.props.userId,
@@ -151,13 +168,13 @@ class MapPage extends Component {
             enablePoweredByContainer={false}
             onPress={(data, details = null) => { // 'details' is provided when fetchDetails = true
               // console.log(data);
-              console.log(data.id);
+              // console.log(data.id);
               // console.log(details.name);
               // console.log(details.geometry.location.lat);
               // console.log(details.geometry.location.lng);
 
               this.setState({
-                gPlaceId: data.id,
+                gPlaceId: data.place_id,
                 name: details.name,
               });
 
@@ -207,7 +224,6 @@ class MapPage extends Component {
               📍
             </Text>
           </TouchableHighlight>
-
           <TouchableHighlight
             style={styles.button}
             onPress={() => { this.submitLocation(); }}
@@ -215,10 +231,9 @@ class MapPage extends Component {
             <Text
               style={styles.buttonText}
             >
-              Submit Place
+              Save Place
             </Text>
           </TouchableHighlight>
-
         </View>
       </View>
     );
