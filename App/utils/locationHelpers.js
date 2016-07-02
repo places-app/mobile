@@ -54,6 +54,7 @@ export default function (userId) {
     console.log(type, ' Error: ', code);
   });
 
+  // This handler fires whenever bgGeo makes an http request
   BackgroundGeolocation.on('http', (response) => {
     const status = response.status;
 
