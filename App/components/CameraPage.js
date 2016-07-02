@@ -45,6 +45,7 @@ class CameraPage extends Component {
           aspect={Camera.constants.Aspect.fill}
           type={Camera.constants.Type.back}
           captureMode={Camera.constants.CaptureMode.video}
+          captureQuality={Camera.constants.CaptureQuality.medium}
           >
           <Text style={styles.capture} onPress={this.captureVideo.bind(this)}>{this.state.action}</Text>
           <Text style={styles.capture} onPress={() => { this.goBack(); }}>Continue</Text>
