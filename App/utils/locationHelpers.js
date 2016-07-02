@@ -60,6 +60,7 @@ export default function (userId) {
     console.log('- HTTP success', status);
   });
 
+
   return BackgroundGeolocation;
 }
 

@@ -20,6 +20,8 @@ export function removeStorage(cb) {
 }
 
 
+
+
     // AsyncStorage.getItem('fbToken', (err, result) => {
     //   console.log('RETRIEVED FROM ASYNC STORAGE: ', result);
     // });
