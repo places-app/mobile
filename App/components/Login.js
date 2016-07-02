@@ -57,7 +57,6 @@ class Login extends Component {
           source={{ uri: 'http://2.bp.blogspot.com/-IELsSax8WPg/Tyzsu05V8qI/AAAAAAAAAWU/qbPzat5H2Oc/s400/Map_pin2.png' }}
         />
         <Text style={styles.heading}> Places </Text>
-
         <TouchableHighlight style={styles.button}>
           <Text
             style={styles.buttonText}
@@ -110,7 +109,7 @@ class Login extends Component {
                         const config = {
                           // uncomment for deployed live server
                           // url: `http://162.243.211.18:7000/auth/facebook/token?access_token=${this.state.fbToken}`,
-                          url: `http://localhost:7000/auth/facebook/token?access_token=${this.state.fbToken}`,
+                          url: `http://10.8.28.176:7000/auth/facebook/token?access_token=${this.state.fbToken}`,
                           method: 'get',
                         };
 

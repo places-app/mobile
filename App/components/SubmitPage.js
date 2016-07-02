@@ -7,8 +7,10 @@ import {
   TouchableHighlight,
   TextInput,
   ActivityIndicatorIOS,
+  NativeModules,
 } from 'react-native';
 
+import CameraPage from './CameraPage';
 import axios from 'axios';
 import { GOOGLE_GEO_KEY } from '../config/apiKey';
 
@@ -26,6 +28,7 @@ class SubmitPage extends Component {
         lat: props.lat,
         lng: props.lng,
       },
+      filePath: '',
       note: '',
       showProgess: false,
     };
@@ -86,41 +89,108 @@ class SubmitPage extends Component {
     this.props.clearName();
   }
 
+  addVideo() {
+    this.props.navigator.push({
+      component: CameraPage,
+      title: 'Camera Page',
+      backButtonTitle: 'Return',
+      passProps: {
+        userId: this.state.userId,
+        gPlaceId: this.state.location.gPlaceId,
+        name: this.state.location.name,
+        lat: this.state.location.lat,
+        lng: this.state.location.lng,
+        note: this.state.note,
+        returnProps: this.returnProps.bind(this),
+      },
+    });
+  }
+
+  returnProps(filePath, note) {
+    this.setState({
+      filePath,
+      note,
+    });
+  }
+
   submitLocation() {
     this.setState({ showProgess: true });
     const userId = this.state.userId;
     const note = this.state.note;
     const location = this.state.location;
+    const { name, lat, lng, gPlaceId } = this.state.location;
     const self = this;
     console.log('Clicked!');
-    console.log(`place is: ${location.name}
+    console.log(`
+      place is: ${location.name}
       note is: ${this.state.note}
-      id is: ${location.gPlaceId}`);
+      gplaceid is: ${location.gPlaceId}
+    `);
     const body = {
       userId,
-      location,
+      name,
+      lat,
+      lng,
+      gPlaceId,
       note,
     };
     // uncomment for deployed live server
     // const url = `http://162.243.211.18:7000/api/users/${userId}/places`;
-    const url = `http://localhost:7000/api/users/${userId}/places`;
-    fetch(url, {
-      method: 'POST',
+    // uncomment for HR wifi ip
+    // const url = `http://10.8.28.176:7000/api/users/${userId}/places`;
+    const url = `http://10.8.28.176:7000/api/users/${userId}/places`;
+
+    const obj = {
+      uri: this.state.filePath,
+      // either an 'assets-library' url (for files from photo library) or an image dataURL
+      uploadUrl: url,
+      fileName: `${body.userId}-${body.name}`,
+      // should match the name 'file' for multer
+      fileKey: 'file',
+      mimeType: 'video/quicktime',
       headers: {
-        'Content-Type': 'application/json',
+        'Content-Type': 'application/x-www-form-urlencoded',
       },
-      body: JSON.stringify(body),
-    })
-    .then((response) => {
-      console.log(response);
-      if (response.status === 201 || response.status === 202) {
-        self.setState({ showProgess: false });
-        self.goBack();
-      }
-    })
-    .catch((error) => {
-      console.warn(error);
-    });
+      data: body,
+    };
+
+    if (this.state.filePath) {
+      NativeModules.FileTransfer.upload(obj, (err, res) => {
+        // handle response
+        // if the file path protocol is not supported the status will be 0
+        // and the request won't be made at all
+        if (res.status === 0) {
+          console.log('File path protocal is not supported');
+        }
+        // it is an object with 'status' and 'data' properties
+        if (res) {
+          if (res.status === 201 || res.status === 202) {
+            self.setState({ showProgess: false });
+            self.goBack();
+          }
+        } else {
+          console.log(err);
+        }
+      });
+    } else {
+      fetch(url, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(body),
+      })
+      .then((response) => {
+        console.log(response);
+        if (response.status === 201 || response.status === 202) {
+          self.setState({ showProgess: false });
+          self.goBack();
+        }
+      })
+      .catch((error) => {
+        console.warn(error);
+      });
+    }
   }
 
   render() {
@@ -136,13 +206,11 @@ class SubmitPage extends Component {
             </Text>
           </TouchableHighlight>
         </View>
-
         <View style={styles.main}>
           <Image
             style={styles.logo}
             source={{ uri: 'http://2.bp.blogspot.com/-IELsSax8WPg/Tyzsu05V8qI/AAAAAAAAAWU/qbPzat5H2Oc/s400/Map_pin2.png' }}
           />
-          <Text> Save Place </Text>
           <Text style={styles.selectedPlace}>
             {this.state.location.name}
           </Text>
@@ -154,6 +222,16 @@ class SubmitPage extends Component {
             placeholderTextColor="white"
             placeholder="Note about place"
           />
+          <TouchableHighlight
+            style={styles.button}
+            onPress={() => { this.addVideo(); }}
+          >
+            <Text
+              style={styles.buttonText}
+            >
+              Add a Video
+            </Text>
+          </TouchableHighlight>
           <TouchableHighlight
             style={styles.button}
             onPress={() => { this.submitLocation(); }}
@@ -254,6 +332,7 @@ SubmitPage.propTypes = {
   name: React.PropTypes.string,
   lat: React.PropTypes.number,
   lng: React.PropTypes.number,
+  filePath: React.PropTypes.string,
 };
 
 export default SubmitPage;

@@ -151,13 +151,13 @@ class MapPage extends Component {
             enablePoweredByContainer={false}
             onPress={(data, details = null) => { // 'details' is provided when fetchDetails = true
               // console.log(data);
-              console.log(data.id);
+              // console.log(data.id);
               // console.log(details.name);
               // console.log(details.geometry.location.lat);
               // console.log(details.geometry.location.lng);
 
               this.setState({
-                gPlaceId: data.id,
+                gPlaceId: data.place_id,
                 name: details.name,
               });
 
@@ -207,7 +207,6 @@ class MapPage extends Component {
               📍
             </Text>
           </TouchableHighlight>
-
           <TouchableHighlight
             style={styles.button}
             onPress={() => { this.submitLocation(); }}
@@ -215,10 +214,9 @@ class MapPage extends Component {
             <Text
               style={styles.buttonText}
             >
-              Submit Place
+              Save Place
             </Text>
           </TouchableHighlight>
-
         </View>
       </View>
     );
