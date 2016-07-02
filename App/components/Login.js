@@ -14,8 +14,9 @@ import MapPage from './MapPage';
 import axios from 'axios';
 import { setStorage, getStorage } from '../utils/authHelpers';
 
-// const host = '162.243.211.18';
-const host = 'localhost';
+const host = '162.243.211.18';
+// const host = 'localhost';
+
 
 
 class Login extends Component {
