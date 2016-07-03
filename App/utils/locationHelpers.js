@@ -22,7 +22,7 @@ export default function (userId) {
     activityType: 'AutomotiveNavigation',
 
     // Application config
-    debug: true, // <-- enable this hear sounds for background-geolocation life-cycle.
+    debug: false, // <-- enable this hear sounds for background-geolocation life-cycle.
     // forceReloadOnLocationChange: false,
     // forceReloadOnMotionChange: false,
     // forceReloadOnGeofence: false,
