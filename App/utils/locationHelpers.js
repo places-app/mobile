@@ -1,9 +1,7 @@
 const BackgroundGeolocation = require('react-native-background-geolocation');
 
-// host ip of the location server
-// const host = '10.8.28.177';
-const host = '162.243.137.169';
-// const host = 'localhost';
+// host ip of the location server on digital ocean
+const host = '104.236.72.252';
 
 export default function (userId) {
   BackgroundGeolocation.stop();
