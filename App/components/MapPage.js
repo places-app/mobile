@@ -5,12 +5,14 @@ import {
   View,
   TouchableHighlight,
   MapView,
+  Alert,
 } from 'react-native';
 
 import { removeStorage } from '../utils/authHelpers';
 import SubmitPage from './SubmitPage';
 import { GOOGLE_PL_KEY } from '../config/apiKey';
 const { GooglePlacesAutocomplete } = require('react-native-google-places-autocomplete');
+import backgroundStart from '../utils/locationHelpers';
 
 class MapPage extends Component {
 
@@ -33,6 +35,17 @@ class MapPage extends Component {
       },
     };
     this.deltaTracker = false;
+    const BackgroundGeolocation = backgroundStart(this.props.userId);
+
+    BackgroundGeolocation.start(function() {
+      Alert.alert('- [js] BackgroundGeolocation started successfully');
+      // Fetch current position
+      BackgroundGeolocation.getCurrentPosition({timeout: 30}, function(location) {
+        console.log('- [js] BackgroundGeolocation received current position: ', JSON.stringify(location));
+      }, function(error) {
+        alert("Location error: " + error);
+      });
+    });
   }
 
   componentWillMount() {

@@ -138,7 +138,9 @@ class SubmitPage extends Component {
     // const url = `http://162.243.211.18:7000/api/users/${userId}/places`;
     // uncomment for HR wifi ip
     // const url = `http://10.8.28.176:7000/api/users/${userId}/places`;
-    const url = `http://10.8.28.176:7000/api/users/${userId}/places`;
+    // const url = `http://10.8.28.176:7000/api/users/${userId}/places`;
+    // const url = `http://162.243.211.18:7000/api/users/${this.state.userId}/places`;
+    const url = `http://10.8.28.177:7000/api/users/${this.state.userId}/places`;
 
     const obj = {
       uri: this.state.filePath,

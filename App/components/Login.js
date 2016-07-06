@@ -14,6 +14,10 @@ import MapPage from './MapPage';
 import axios from 'axios';
 import { setStorage, getStorage } from '../utils/authHelpers';
 
+// const host = '162.243.211.18';
+// const host = 'localhost';
+const host = '10.8.28.177';
+
 class Login extends Component {
 
   constructor(props) {
@@ -37,6 +41,7 @@ class Login extends Component {
     });
   }
 
+
   // handleTest() {
 
   //   fetch(`http://localhost:7000/test`)
@@ -47,6 +52,7 @@ class Login extends Component {
   //   console.log('token stored: ', getStorage((r)=>console.log(r)))
   //   console.log('local token: ', this.props.fbToken)
   // }
+
 
 
   render() {
@@ -107,9 +113,7 @@ class Login extends Component {
                         // });
 
                         const config = {
-                          // uncomment for deployed live server
-                          // url: `http://162.243.211.18:7000/auth/facebook/token?access_token=${this.state.fbToken}`,
-                          url: `http://10.8.28.176:7000/auth/facebook/token?access_token=${this.state.fbToken}`,
+                          url: `http://${host}:7000/auth/facebook/token?access_token=${this.state.fbToken}`,
                           method: 'get',
                         };
 
