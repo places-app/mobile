@@ -1,13 +1,13 @@
 import { AsyncStorage } from 'react-native';
 
-export function setStorage(fbToken, cb) {
-  AsyncStorage.setItem('fbToken', fbToken, () => {
+export function setStorage(userId, cb) {
+  AsyncStorage.setItem('userId', userId, () => {
     cb();
   });
 }
 
 export function getStorage(cb) {
-  AsyncStorage.getItem('fbToken', (err, result) => {
+  AsyncStorage.getItem('userId', (err, result) => {
     cb(result);
   });
 }
@@ -19,9 +19,3 @@ export function removeStorage(cb) {
   });
 }
 
-
-
-
-    // AsyncStorage.getItem('fbToken', (err, result) => {
-    //   console.log('RETRIEVED FROM ASYNC STORAGE: ', result);
-    // });
