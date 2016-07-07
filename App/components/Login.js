@@ -1,5 +1,6 @@
 const FBSDK = require('react-native-fbsdk');
 const { LoginButton, AccessToken } = FBSDK;
+import Icon from 'react-native-vector-icons/FontAwesome';
 
 import React, { Component } from 'react';
 import {
@@ -14,9 +15,9 @@ import MapPage from './MapPage';
 import axios from 'axios';
 import { setStorage, getStorage } from '../utils/authHelpers';
 
-// const host = '162.243.211.18';
+const host = '162.243.211.18';
 // const host = 'localhost';
-const host = '10.8.28.177';
+// const host = '10.8.28.177';
 
 class Login extends Component {
 
@@ -28,11 +29,20 @@ class Login extends Component {
     };
   }
 
-  // login() {
-  //   this.setState({
-  //     loggedIn: true,
-  //   });
-  // }
+  componentWillMount() {
+    getStorage((result) => {
+      if (result) {
+        console.log(result);
+        this.props.navigator.push({
+          component: MapPage,
+          title: 'Map Page',
+          passProps: {
+            userId: result,
+          },
+      });
+    }
+  });
+  }
 
   handleSubmit() {
     this.props.navigator.push({
@@ -109,9 +119,6 @@ class Login extends Component {
                           fbToken: fbRes.accessToken.toString(),
                         });
 
-                        // setStorage(JSON.stringify(fbRes.accessToken), () => {
-                        // });
-
                         const config = {
                           url: `http://${host}:7000/auth/facebook/token?access_token=${this.state.fbToken}`,
                           method: 'get',
@@ -119,6 +126,10 @@ class Login extends Component {
 
                         axios(config)
                         .then(({ data }) => {
+
+                          setStorage(JSON.stringify(data.id), () => {
+                          });
+
                           this.props.navigator.push({
                             component: MapPage,
                             title: 'Map Page',
