@@ -8,11 +8,15 @@ import {
   TextInput,
   ActivityIndicatorIOS,
   NativeModules,
+  Dimensions,
 } from 'react-native';
 
 import CameraPage from './CameraPage';
 import axios from 'axios';
 import { GOOGLE_GEO_KEY } from '../config/apiKey';
+import Icon from 'react-native-vector-icons/FontAwesome';
+const width = Dimensions.get('window').width;
+const height = Dimensions.get('window').height;
 
 class SubmitPage extends Component {
 
@@ -139,8 +143,8 @@ class SubmitPage extends Component {
     // uncomment for HR wifi ip
     // const url = `http://10.8.28.176:7000/api/users/${userId}/places`;
     // const url = `http://10.8.28.176:7000/api/users/${userId}/places`;
-    // const url = `http://162.243.211.18:7000/api/users/${this.state.userId}/places`;
-    const url = `http://10.8.28.177:7000/api/users/${this.state.userId}/places`;
+    const url = `http://162.243.211.18:7000/api/users/${this.state.userId}/places`;
+    // const url = `http://10.8.28.177:7000/api/users/${this.state.userId}/places`;
 
     const obj = {
       uri: this.state.filePath,
@@ -204,15 +208,28 @@ class SubmitPage extends Component {
             onPress={() => { this.goBack(); }}
           >
             <Text style={styles.navText}>
-              ←
+              <Icon name="arrow-left" size={35} color="white" />
             </Text>
+          </TouchableHighlight>
+          <TouchableHighlight
+            style={styles.navCamera}
+            onPress={() => { this.addVideo(); }}
+          >
+            <Icon
+              name="camera"
+              size={45}
+              color={this.state.filePath.length === 0 ? 'black' : 'green'}
+            />
           </TouchableHighlight>
         </View>
         <View style={styles.main}>
           <Image
             style={styles.logo}
-            source={{ uri: 'http://2.bp.blogspot.com/-IELsSax8WPg/Tyzsu05V8qI/AAAAAAAAAWU/qbPzat5H2Oc/s400/Map_pin2.png' }}
+            source={{ uri: 'http://www.glpapp.com/assets/img/compass.png' }}
           />
+          <Text style={styles.placeIntro}>
+            Your Place
+          </Text>
           <Text style={styles.selectedPlace}>
             {this.state.location.name}
           </Text>
@@ -221,25 +238,27 @@ class SubmitPage extends Component {
             style={styles.input}
             multiline
             blurOnSubmit
-            placeholderTextColor="white"
-            placeholder="Note about place"
+            placeholder="Enter note..."
           />
           <TouchableHighlight
-            style={styles.button}
-            onPress={() => { this.addVideo(); }}
-          >
-            <Text
-              style={styles.buttonText}
-            >
-              Add a Video
-            </Text>
-          </TouchableHighlight>
-          <TouchableHighlight
-            style={styles.button}
+            style={{
+              top: height * 0.08,
+              height: 50,
+              alignSelf: 'stretch',
+              marginTop: 10,
+              alignItems: 'center',
+              justifyContent: 'center',
+              borderRadius: 10,
+              backgroundColor: this.state.note.length === 0 ? '#9EA2A3' : 'black',
+            }}
             onPress={() => { this.submitLocation(); }}
+            disabled={this.state.note.length === 0 ? true : false}
           >
             <Text
-              style={styles.buttonText}
+              style={{
+              fontSize: 20,
+              color: this.state.note.length === 0 ? '#404242' : 'white',
+            }}
             >
               Submit Place
             </Text>
@@ -260,67 +279,72 @@ class SubmitPage extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#ddccff',
+    backgroundColor: '#cfd8dc',
   },
   main: {
     alignItems: 'center',
-    backgroundColor: '#ddccff',
+    backgroundColor: '#cfd8dc',
     paddingTop: 40,
     padding: 10,
   },
   logo: {
-    marginTop: 40,
+    marginTop: 20,
     width: 100,
     height: 100,
   },
-  button: {
-    height: 50,
-    backgroundColor: '#9966ff',
-    alignSelf: 'stretch',
-    marginTop: 10,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
   input: {
+    top: height * 0.05,
     backgroundColor: 'white',
-    color: '#9966ff',
+    color: 'black',
     height: 150,
     marginTop: 10,
     padding: 4,
     fontSize: 18,
     borderWidth: 1,
-    borderColor: '#9966ff',
-  },
-
-  buttonText: {
-    fontSize: 20,
-    color: 'white',
+    borderColor: '#607d8b',
   },
   loader: {
-    marginTop: 20,
+    top: 60,
+  },
+  placeIntro: {
+    fontWeight: 'bold',
+    top: 25,
+    fontSize: 20,
   },
   selectedPlace: {
-    fontWeight: 'bold',
+    // fontWeight: 'bold',
+    color: 'black',
     height: 50,
     marginTop: 30,
     padding: 4,
     fontSize: 18,
+    // textShadowColor: 'blue',
+    // textShadowRadius: 1,
+    // textShadowOffset: {width: 0.5, height: 0.5}
   },
   nav: {
     height: 75,
-    backgroundColor: '#9966ff',
-    justifyContent: 'center',
+    backgroundColor: '#607d8b',
+    flexWrap: 'wrap',
+    alignItems: 'flex-start',
+    flexDirection: 'row',
   },
 
   navText: {
     fontSize: 50,
+    paddingTop: 15,
     color: 'white',
   },
 
   navButton: {
+    paddingTop: 10,
     left: 10,
-    width: 30,
-    justifyContent: 'center',
+    // width: 30,
+  },
+
+  navCamera: {
+    paddingTop: 25,
+    left: width * 0.75,
   },
 
 });

@@ -6,6 +6,7 @@ import {
   TouchableHighlight,
   MapView,
   Alert,
+  Dimensions,
 } from 'react-native';
 
 import { removeStorage } from '../utils/authHelpers';
@@ -13,6 +14,10 @@ import SubmitPage from './SubmitPage';
 import { GOOGLE_PL_KEY } from '../config/apiKey';
 const { GooglePlacesAutocomplete } = require('react-native-google-places-autocomplete');
 import backgroundStart from '../utils/locationHelpers';
+import Icon from 'react-native-vector-icons/FontAwesome';
+
+const width = Dimensions.get('window').width;
+const height = Dimensions.get('window').height;
 
 class MapPage extends Component {
 
@@ -146,13 +151,13 @@ class MapPage extends Component {
               }); }
           }
 
-          annotations={[{
-            latitude: this.state.pinLat,
-            longitude: this.state.pinLng,
-            title: 'Save Place?',
-            subtitle: 'Click Submit to Share',
-            tintColor: 'purple',
-          }]}
+          // annotations={[{
+          //   latitude: this.state.pinLat,
+          //   longitude: this.state.pinLng,
+          //   title: 'Save Place?',
+          //   subtitle: 'Click Submit to Share',
+          //   tintColor: 'purple',
+          // }]}
 
         />
         <View style={styles.searchContainer}>
@@ -208,8 +213,20 @@ class MapPage extends Component {
         </View>
         <View style={{
           position: 'absolute',
+          left: width / 2 - 15,
+          top: height / 2 - 15,
+          backgroundColor: 'transparent',
+        }}>
+          <Text
+            style={styles.pin}
+          >
+            📍
+          </Text>
+        </View>
+        <View style={{
+          position: 'absolute',
           left: 25,
-          top: 525,
+          top: height * 0.80,
           backgroundColor: 'transparent',
         }}>
           <TouchableHighlight style={styles.center}>
@@ -217,7 +234,7 @@ class MapPage extends Component {
               style={styles.centerText}
               onPress={() => { this.centerPin(this.state.userLat, this.state.userLng); }}
             >
-              📍
+              <Icon name="location-arrow" size={25} color="black" />
             </Text>
           </TouchableHighlight>
           <TouchableHighlight
@@ -245,9 +262,9 @@ const styles = StyleSheet.create({
   searchContainer: {
     left: 25,
     top: 55,
-    width: 325,
+    width: width * 0.87,
     position: 'absolute',
-    backgroundColor: '#9966ff',
+    backgroundColor: '#607d8b',
   },
   logo: {
     marginTop: 40,
@@ -257,8 +274,8 @@ const styles = StyleSheet.create({
   button: {
 
     height: 50,
-    width: 325,
-    backgroundColor: '#9966ff',
+    width: width * 0.87,
+    backgroundColor: '#607d8b',
     borderRadius: 10,
     alignSelf: 'stretch',
     marginTop: 10,
@@ -273,18 +290,13 @@ const styles = StyleSheet.create({
   },
 
   center: {
-    left: 320,
-    width: 25,
-    backgroundColor: '#9966ff',
-    alignSelf: 'stretch',
-    marginTop: 10,
-    alignItems: 'center',
-    justifyContent: 'center',
+    left: width * 0.8,
+    width: width * 0.07,
+    paddingBottom: 5,
   },
 
-  centerText: {
-    fontSize: 20,
-    color: 'white',
+  pin: {
+    fontSize: 30,
   },
 
 });
