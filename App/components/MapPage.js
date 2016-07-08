@@ -42,13 +42,17 @@ class MapPage extends Component {
     this.deltaTracker = false;
     const BackgroundGeolocation = backgroundStart(this.props.userId);
 
+    BackgroundGeolocation.on('location', (location) => {
+      console.log('- [js]location: ', JSON.stringify(location));
+    });
+
     BackgroundGeolocation.start(function() {
-      Alert.alert('- [js] BackgroundGeolocation started successfully');
+      console.log('- [js] BackgroundGeolocation started successfully');
       // Fetch current position
       BackgroundGeolocation.getCurrentPosition({timeout: 30}, function(location) {
         console.log('- [js] BackgroundGeolocation received current position: ', JSON.stringify(location));
       }, function(error) {
-        alert("Location error: " + error);
+        console.log("Location error: " + error);
       });
     });
   }

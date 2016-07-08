@@ -9,6 +9,8 @@ import {
   View,
   Image,
   TouchableHighlight,
+  Dimensions,
+  StatusBar,
 } from 'react-native';
 
 import MapPage from './MapPage';
@@ -18,6 +20,9 @@ import { setStorage, getStorage } from '../utils/authHelpers';
 const host = '162.243.211.18';
 // const host = 'localhost';
 // const host = '10.8.28.177';
+
+const width = Dimensions.get('window').width;
+const height = Dimensions.get('window').height;
 
 class Login extends Component {
 
@@ -37,7 +42,7 @@ class Login extends Component {
           component: MapPage,
           title: 'Map Page',
           passProps: {
-            userId: result,
+            userId: +result,
           },
       });
     }
@@ -63,97 +68,74 @@ class Login extends Component {
   //   console.log('local token: ', this.props.fbToken)
   // }
 
-
-
   render() {
     return (
-      <View style={styles.container}>
         <Image
-          style={styles.logo}
-          source={{ uri: 'http://2.bp.blogspot.com/-IELsSax8WPg/Tyzsu05V8qI/AAAAAAAAAWU/qbPzat5H2Oc/s400/Map_pin2.png' }}
-        />
-        <Text style={styles.heading}> Places </Text>
-        <TouchableHighlight style={styles.button}>
-          <Text
-            style={styles.buttonText}
-            onPress={() => { this.handleSubmit(); }}
-          >
-            Log In
-          </Text>
-        </TouchableHighlight>
+          source={{ uri: 'https://gaijinpot.scdn5.secure.raxcdn.com/wp-content/uploads/sites/4/2014/08/Shibuya_Night.jpg' }}
+          style={styles.backgroundImage}
+        >
+          <StatusBar hidden={true} />
+          <View style={styles.backdrop}>
+              <Text style={styles.heading}> Places </Text>
+          </View>
+              <LoginButton
+                style={styles.login}
+                publishPermissions={['publish_actions']}
+                onLoginFinished={
+                  (error, result) => {
+                    if (error) {
+                      alert(`login has error: ${result.error}`);
+                    } else if (result.isCancelled) {
+                      alert('login is cancelled.');
+                    } else {
+                      AccessToken.getCurrentAccessToken().then(
+                        (fbRes) => {
+                          console.log(fbRes);
 
-        <TouchableHighlight style={styles.button}>
-          <Text
-            style={styles.buttonText}
-            onPress={() => { this.handleTest(); }}
-          >
-            TEST
-          </Text>
-        </TouchableHighlight>
-
-        <TouchableHighlight style={styles.button}>
-          <Text
-            style={styles.buttonText}
-            onPress={() => { this.logToken(); }}
-          >
-            Display Login Token
-          </Text>
-        </TouchableHighlight>
-
-        <View>
-          <View style={styles.container}>
-            <LoginButton
-              publishPermissions={['publish_actions']}
-              onLoginFinished={
-                (error, result) => {
-                  if (error) {
-                    alert(`login has error: ${result.error}`);
-                  } else if (result.isCancelled) {
-                    alert('login is cancelled.');
-                  } else {
-                    AccessToken.getCurrentAccessToken().then(
-                      (fbRes) => {
-                        console.log(fbRes);
-
-                        this.setState({
-                          fbToken: fbRes.accessToken.toString(),
-                        });
-
-                        const config = {
-                          url: `http://${host}:7000/auth/facebook/token?access_token=${this.state.fbToken}`,
-                          method: 'get',
-                        };
-
-                        axios(config)
-                        .then(({ data }) => {
-
-                          setStorage(JSON.stringify(data.id), () => {
+                          this.setState({
+                            fbToken: fbRes.accessToken.toString(),
                           });
 
-                          this.props.navigator.push({
-                            component: MapPage,
-                            title: 'Map Page',
-                            passProps: {
-                              userId: data.id,
-                            },
+
+                          const config = {
+                            url: `http://${host}:7000/auth/facebook/token?access_token=${this.state.fbToken}`,
+                            method: 'get',
+                          };
+
+                          axios(config)
+                          .then(({ data }) => {
+                            setStorage(JSON.stringify(data.id), () => {
+                            });
+
+                            this.props.navigator.push({
+                              component: MapPage,
+                              title: 'Map Page',
+                              passProps: {
+                                userId: data.id,
+                              },
+                            });
                           });
-                        });
-                      }
-                    );
+                        }
+                      );
+                    }
                   }
                 }
-              }
-              onLogoutFinished={() => alert('logout.')}
-            />
-          </View>
-        </View>
-
-      </View>
+                onLogoutFinished={() => alert('logout.')}
+              />
+        </Image>
     );
   }
 }
 
 const styles = StyleSheet.create({
+  backgroundImage: {
+    flex: 1,
+    resizeMode: 'cover', // or 'stretch'
+    alignItems: 'center',
+  },
+  backdrop: {
+    backgroundColor: 'rgba(0,0,0,0)',
+  },
   container: {
     flex: 1,
     alignItems: 'center',
@@ -166,8 +148,10 @@ const styles = StyleSheet.create({
     height: 100,
   },
   heading: {
-    fontSize: 30,
-    marginTop: 10,
+    fontSize: 60,
+    marginTop: 40,
+    color: '#cfd8dc',
+    fontWeight: 'bold',
   },
   input: {
     height: 50,
@@ -177,10 +161,15 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: '#ff0066',
   },
+  login: {
+    width: 200,
+    height: 50,
+    top: height * 0.60,
+  },
   button: {
 
     height: 50,
-    backgroundColor: '#ff0066',
+    backgroundColor: '#9fa8da',
     alignSelf: 'stretch',
     marginTop: 10,
     alignItems: 'center',

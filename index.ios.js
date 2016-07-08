@@ -14,15 +14,6 @@ class placesMobile extends Component {
     };
   }
 
-  // componentDidMount() {
-  //   getStorage((fbToken) => {
-  //     if (fbToken) {
-  //       this.setState({
-  //         fbToken,
-  //       });
-  //     }
-  //   });
-  // }
 
   render() {
     return (
