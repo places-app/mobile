@@ -42,7 +42,7 @@ class Login extends Component {
           component: MapPage,
           title: 'Map Page',
           passProps: {
-            userId: result,
+            userId: +result,
           },
       });
     }
@@ -96,8 +96,6 @@ class Login extends Component {
                             fbToken: fbRes.accessToken.toString(),
                           });
 
-                          // setStorage(JSON.stringify(fbRes.accessToken), () => {
-                          // });
 
                           const config = {
                             url: `http://${host}:7000/auth/facebook/token?access_token=${this.state.fbToken}`,
@@ -106,6 +104,9 @@ class Login extends Component {
 
                           axios(config)
                           .then(({ data }) => {
+                            setStorage(JSON.stringify(data.id), () => {
+                            });
+
                             this.props.navigator.push({
                               component: MapPage,
                               title: 'Map Page',

@@ -41,9 +41,9 @@ export default function (userId) {
   });
 
     // This handler fires whenever bgGeo receives a location update.
-  BackgroundGeolocation.on('location', (location) => {
-    console.log('- [js]location: ', JSON.stringify(location));
-  });
+  // BackgroundGeolocation.on('location', (location) => {
+  //   Alert.alert('- [js]location: ', JSON.stringify(location));
+  // });
 
   // This handler fires whenever bgGeo receives an error
   BackgroundGeolocation.on('error', (error) => {

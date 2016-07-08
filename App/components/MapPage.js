@@ -42,6 +42,10 @@ class MapPage extends Component {
     this.deltaTracker = false;
     const BackgroundGeolocation = backgroundStart(this.props.userId);
 
+    BackgroundGeolocation.on('location', (location) => {
+      console.log('- [js]location: ', JSON.stringify(location));
+    });
+
     BackgroundGeolocation.start(function() {
       console.log('- [js] BackgroundGeolocation started successfully');
       // Fetch current position
